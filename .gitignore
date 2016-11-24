@@ -14,8 +14,10 @@ gen3va/static/softfile/
 gen3va/static/downloads/
 clustergrammer_payload*
 
-# Scripts and data for the database
-scripts/
+# Data in scripts/ for the database
+scripts/*.csv
+scripts/*.txt
+scripts/*.png
 
 # Chrome Extension zip file
 *.zip

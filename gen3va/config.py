@@ -6,7 +6,7 @@ import os
 
 class Config(object):
 
-    with open('gen3va/app.conf') as f:
+    with open('gen3va/dev.conf') as f:
         lines = [x for x in f.read().split('\n')]
 
     DEBUG = lines[1] == 'True'
