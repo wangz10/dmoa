@@ -1,6 +1,6 @@
 {% extends 'wrapper.html' %}
 
-{% block title %}{{ tag.name }}{% endblock %}
+{% block title %}{{ drug.pert_iname }}{% endblock %}
 
 {% block body %}
 
@@ -47,7 +47,7 @@
                 <div class='report-metadata'>
                     <h1>
                     {% if report.is_approved %}
-                        <strong>{{ tag.name|upper }}</strong> <span>report</span>
+                        <strong>{{ drug.pert_iname|upper }}</strong> <span>report</span>
                     {% else %}
                         <strong>{{ report.name }}</strong><span>, custom report for {{ tag.name|upper }}</span>
                     {% endif %}
@@ -60,6 +60,30 @@
                             All reports
                         </a>
                     </p>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h2>Overview</h2>
+                            <dl class="dl-horizontal">
+                                {% for key, value in drug.to_dict().items() %}
+                                    <dt>{{ key }}</dt>
+                                    <dd>{{ value }}</dd>
+                                {% endfor %}
+                            </dl>
+
+                            <h2>External links</h2>
+                            <dl class="dl-horizontal">
+                                {% for key, (display_name, url) in drug.get_external_links().items() %}
+                                    <dt>{{ key }}</dt>
+                                    <dd><a href="{{ url }}" target="_blank">{{ display_name }}</a></dd>
+                                {% endfor %}
+                            </dl>
+                        </div>
+
+                        <div class="col-md-4">
+                            <h2>Chemical structure</h2>
+                            <img src="{{ drug.structure_url }}">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -6,6 +6,7 @@ from flask import Blueprint, jsonify, redirect, request, render_template, \
 from flask.ext.login import login_required
 
 from substrate import Report, Tag
+from gen3va.database import Drug
 from gen3va.config import Config
 from gen3va import database, report_builder
 
@@ -38,11 +39,15 @@ def view_approved_report(tag_name):
     """Renders approved report page.
     """
     tag = database.get(Tag, tag_name, 'name')
+    drug = database.get(Drug, tag_name, 'pert_id')
+    print drug
+    print drug.pert_summary
     if not tag:
         abort(404)
     report = tag.approved_report
     return render_template('pages/report.html',
                            tag=tag,
+                           drug=drug,
                            report=report)
 
 

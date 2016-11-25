@@ -9,3 +9,4 @@ from database import \
     update_object,\
     delete_object,\
     get_statistics
+from models import Drug
