@@ -31,7 +31,7 @@ def build(tag, category, reanalyze=False):
             report = Report(tag, is_approved=True, category=category)
             session.add(report)
             session.flush()
-    _build(report.id, category)
+        _build(report.id, category)
 
 
 def build_custom(tag, gene_signatures, report_name, category):
