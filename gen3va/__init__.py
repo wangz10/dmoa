@@ -51,6 +51,19 @@ app.register_blueprint(endpoints.upload_api)
 app.register_blueprint(jinjafilters)
 
 
+# Build all reports on starting the app
+from substrate import Tag
+from gen3va import database, report_builder
+@app.before_first_request
+def build_all_reports():
+    # Get all tags 
+    tags = database.get_all(Tag)
+    print [tag.name for tag in tags]
+    for tag in tags:
+        if tag.name.startswith('BRD-'):
+            report_builder.build(tag, category=None)
+    return
+
 # User authentication
 # ----------------------------------------------------------------------------
 login_manager = LoginManager()
