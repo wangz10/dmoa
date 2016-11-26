@@ -17,6 +17,8 @@ print hgnc_genes.head()
 genes = hgnc_genes['symbol'].tolist()
 
 cells = ['MCF7', 'PC3', 'MCF10A']
+doses = [1, 5, 10]
+times = [6, 24]
 
 def make_fake_signature(genes, n_genes=100):
 	genes = np.random.choice(genes, n_genes, replace=False)
@@ -41,20 +43,26 @@ for pert_id, row in drugs_lincs.iterrows():
 	# fake 10 signatures for each drug
 	for i in range(10):
 		sig = make_fake_signature(genes)
+		cell = np.random.choice(cells, 1)[0]
+		dose = np.random.choice(doses, 1)[0]
+		time = np.random.choice(times, 1)[0]
+		sig_id = '%s:%s_%s_%s' % (pert_id, cell, dose, time)
 		payload = {
 			'ranked_genes': sig,
 			'diffexp_method': 'chdir',
-			'tags': ['test_tag', pert_id, drug_name],
+			'tags': ['test_tag', pert_id],
 			'gene': None,
-			'cell': np.random.choice(cells, 1)[0],
+			'cell': cell,
 			'perturbation': drug_name,
 			'disease': None,
 			## optional metadata
 			'metadata[pert_id]': pert_id,
-			'metadata[structure_url]': structure_url,
+			'metadata[dose]': dose,
+			'metadata[time]': time,
+			'metadata[sig_id]': sig_id,
 		}
 		resp = requests.post(G2E_API, data=json.dumps(payload))
 
-	if c >5:
+	if c >2:
 		break
 

@@ -105,9 +105,9 @@
                         <thead>
                             <tr>
                                 <th></th>
-                                <th>Title</th>
-                                <th>Organism</th>
-                                <th>Platform</th>
+                                <th>Signature ID</th>
+                                <th>Cell</th>
+                                <th>Dose</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -123,14 +123,14 @@
                                                  {{ gene_signature.name }}
                                             </a>
                                         {% else %}
-                                            {{ gene_signature.name }}
+                                            {{ gene_signature.get_optional_metadata('sig_id').value|c_filter_empty }}
                                         {% endif %}
                                     </td>
                                     <td class='organism'>
-                                        {{ gene_signature.organism|c_filter_empty }}
+                                        {{ gene_signature.get_optional_metadata('cell').value|c_filter_empty }}
                                     </td>
                                     <td class='platform'>
-                                        {{ gene_signature.platform|c_filter_empty }}
+                                        {{ gene_signature.get_optional_metadata('dose').value|c_filter_empty }}
                                     </td>
                                 </tr>
                             {% endfor %}

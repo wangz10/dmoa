@@ -61,7 +61,7 @@ def build_all_reports():
     print [tag.name for tag in tags]
     for tag in tags:
         if tag.name.startswith('BRD-'):
-            report_builder.build(tag, category=None)
+            report_builder.build(tag, category='cell')
     return
 
 # User authentication
