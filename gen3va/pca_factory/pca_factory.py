@@ -39,6 +39,13 @@ def from_report(gene_signatures, category):
     for i, (x, y, z) in enumerate(pca_coords):
         sig = gene_signatures[i]
         opt = sig.get_optional_metadata(category)
+        # Use sig_id to be displayed in tooltips
+        label = sig.get_optional_metadata('sig_id')
+        if label is not None:
+            label = label.value
+        else:
+            label = sig.name
+            
         if opt:
             if opt.value not in series_obj:
                 series_obj[opt.value] = []
@@ -46,7 +53,7 @@ def from_report(gene_signatures, category):
                 'x': x,
                 'y': y,
                 'z': z,
-                'name': sig.name
+                'name': label
             })
         else:
             if unspecified_key not in series_obj:
@@ -55,7 +62,7 @@ def from_report(gene_signatures, category):
                 'x': x,
                 'y': y,
                 'z': z,
-                'name': sig.name
+                'name': label
             })
 
     series = []
