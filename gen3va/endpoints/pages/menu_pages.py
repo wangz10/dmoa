@@ -6,6 +6,7 @@ import json
 from flask import abort, Blueprint, render_template, request
 
 from substrate import BioCategory, Curator, Tag
+from gen3va.database import Drug
 from gen3va.database import database
 from gen3va.config import Config
 
@@ -40,8 +41,11 @@ def index():
 @menu_pages.route('/collections', methods=['GET'])
 def collections():
     tags = database.get_all(Tag)
+    drugs = database.get_all(Drug)
+    d_pert_name = {d.pert_id: d.pert_iname for d in drugs}
     return render_template('pages/collections.html',
                            tags=tags,
+                           d_pert_name=d_pert_name,
                            menu_item='collections')
 
 

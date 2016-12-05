@@ -19,12 +19,12 @@ def build(tag, category, reanalyze=False):
     """
     if tag.approved_report:
         report = tag.approved_report
-        print('Resetting report.')
-        with session_scope() as session:
-            report.reset(reanalyze=reanalyze)
-            report.category = category
-            session.merge(report)
-            session.commit()
+        # print('Resetting report.')
+        # with session_scope() as session:
+        #     report.reset(reanalyze=reanalyze)
+        #     report.category = category
+        #     session.merge(report)
+        #     session.commit()
     else:
         print('Creating new report.')
         with session_scope() as session:

@@ -40,8 +40,6 @@ def view_approved_report(tag_name):
     """
     tag = database.get(Tag, tag_name, 'name')
     drug = database.get(Drug, tag_name, 'pert_id')
-    print drug
-    print drug.pert_summary
     if not tag:
         abort(404)
     report = tag.approved_report
