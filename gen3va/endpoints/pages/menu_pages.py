@@ -41,8 +41,7 @@ def index():
 @menu_pages.route('/collections', methods=['GET'])
 def collections():
     tags = database.get_all(Tag)
-    drugs = database.get_all(Drug)
-    d_pert_name = {d.pert_id: d.pert_iname for d in drugs}
+    d_pert_name = _get_pertid_names(tags)
     return render_template('pages/collections.html',
                            tags=tags,
                            d_pert_name=d_pert_name,
@@ -98,3 +97,13 @@ def _curators_with_approved_reports():
         if use:
             curators.append(curator)
     return curators
+
+def _get_pertid_names(tags):
+  """Returns a dict with pert_id as key and pert_iname as value.
+  """
+  d = {}
+  for tag in tags:
+      drug = database.get(Drug, tag.name, 'pert_id')
+      if drug:
+          d[drug.pert_id] = drug.pert_iname
+  return d
