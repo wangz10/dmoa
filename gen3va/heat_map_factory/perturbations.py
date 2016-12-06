@@ -28,13 +28,14 @@ def prepare_perturbations(Session, signatures, category):
     df_r = _get_raw_data(Session, signatures, False)
     df_r = filters.filter_rows_by_non_empty_until(df_r, max_num_rows)
 
+    n_sigs = len(signatures)
     columns = []
-    for i in range(len(signatures)):
+    for i in range(n_sigs):
         sig = signatures[i]
         mimic_vec = df_m.ix[:,i]
         reverse_vec = df_r.ix[:,i]
         col = utils.build_column(i, sig, mimic_vec, reverse_vec, category)
-        columns.append(col)
+        columns[i] = col
 
     return columns
 
@@ -55,9 +56,9 @@ def _get_raw_data(Session, signatures, use_mimic):
 
         col_title = utils.column_title(i, signature)
         right = pandas.DataFrame(
-            index=[p for p in name],
+            index=name,
             columns=[col_title],
-            data=[s for s in scores]
+            data=scores
         )
 
         if type(right) is not pandas.DataFrame:
@@ -106,20 +107,19 @@ def _mimic_or_reverse_signature(Session, signature, use_mimic):
     resp = requests.post(L1000CDS2_QUERY,
                          data=json.dumps(payload),
                          headers=Config.JSON_HEADERS)
-    data = json.loads(resp.text)
+    data = resp.json()
     share_id = data.get('shareId')
 
     l1000cds2_result = L1000CDS2Results(share_id, use_mimic)
     signature.l1000cds2_results.append(l1000cds2_result)
     Session.merge(signature)
 
-    url = 'http://amp.pharm.mssm.edu/L1000CDS2/' + share_id
-    resp = requests.get(url)
-    data = json.loads(resp.text)['results']
-    perturbations = []
-    names = []
-    scores = []
     top_meta = data['topMeta']
+    n_results = len(top_meta)
+    perturbations = [None] * n_results
+    names = [None] * n_results
+    scores = [None] * n_results
+
 
     for rank, obj in enumerate(top_meta):
         desc_temp = obj['pert_desc']
@@ -132,10 +132,10 @@ def _mimic_or_reverse_signature(Session, signature, use_mimic):
         # this score from 1, we get a negative value for reverse and a
         # positive value for mimic.
         score = 1 - obj['score']
-        names.append(name)
-        scores.append(score)
+        names[rank] = name
+        scores[rank] = score
         pert = Perturbation(rank, name, score)
-        perturbations.append(pert)
+        perturbations[rank] = pert
 
     l1000cds2_result.perturbations = perturbations
     Session.merge(l1000cds2_result)
