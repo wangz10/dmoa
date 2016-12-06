@@ -57,7 +57,8 @@ class Drug(db.Model):
                 'https://pubchem.ncbi.nlm.nih.gov/compound/%s' % self.pubchem_cid)
 
         if self.pert_url != 'NULL':
-            d['Wikipedia'] = (self.pert_url, self.pert_url)
+            pert_url = self.pert_url.split(',')[0]
+            d['Wikipedia'] = (pert_url, pert_url)
 
         if self.LSM_id != 'NULL':
             d['LIFE'] = (self.LSM_id, 
