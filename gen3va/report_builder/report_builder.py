@@ -94,7 +94,7 @@ def subprocess_wrapper(**kwargs):
     session for the applied function to use.
     """
     engine = create_engine(Config.SQLALCHEMY_DATABASE_URI, poolclass=NullPool)
-    session_factory = sessionmaker(bind=engine)
+    session_factory = sessionmaker(bind=engine, autoflush=False)
     Session = scoped_session(session_factory)
     func = kwargs.get('func')
 

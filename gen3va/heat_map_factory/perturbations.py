@@ -29,7 +29,7 @@ def prepare_perturbations(Session, signatures, category):
     df_r = filters.filter_rows_by_non_empty_until(df_r, max_num_rows)
 
     n_sigs = len(signatures)
-    columns = []
+    columns = [None] * n_sigs
     for i in range(n_sigs):
         sig = signatures[i]
         mimic_vec = df_m.ix[:,i]
