@@ -54,39 +54,44 @@ def _build(report_id, category):
     # It should wrap the entire process in a try/except/finally and close the
     # DB session in the finally statement. If an uncaught exception is thrown
     # in the thread, a dangling session will be left open.
-
-    multiprocessing.Process(
+    
+    p1 = multiprocessing.Process(
         target=subprocess_wrapper,
         kwargs={
             'report_id': report_id,
             'func': _perform_pca
-        }).start()
+        })
 
-    multiprocessing.Process(
+    p2 = multiprocessing.Process(
         target=subprocess_wrapper,
         kwargs={
             'report_id': report_id,
             'func': _cluster_ranked_genes
         }
-    ).start()
-
+    )
+    processes = [p1, p2]
     for library in Config.SUPPORTED_ENRICHR_LIBRARIES:
-        multiprocessing.Process(
+        p = multiprocessing.Process(
             target=subprocess_wrapper,
             kwargs={
                 'report_id': report_id,
                 'func': _cluster_enriched_terms,
                 'library': library
             }
-        ).start()
+        )
+        processes.append(p)
 
-    multiprocessing.Process(
+    p4 = multiprocessing.Process(
         target=subprocess_wrapper,
         kwargs={
             'report_id': report_id,
             'func': _cluster_perturbations
         }
-    ).start()
+    )
+    processes.append(p4)
+    [p.start() for p in processes]
+    [p.join() for p in processes]
+    return
 
 
 def subprocess_wrapper(**kwargs):
@@ -100,14 +105,14 @@ def subprocess_wrapper(**kwargs):
 
     try:
         print('=' * 80)
-        print('BEGINNING %s' % func.__name__)
+        print('BEGINNING %s (report_id: %s)' % (func.__name__, kwargs.get('report_id')))
         func(Session, **kwargs)
-        print('COMPLETED %s' % func.__name__)
+        print('COMPLETED %s (report_id: %s)' % (func.__name__, kwargs.get('report_id')))
         print('=' * 80)
         Session.commit()
     except Exception as e:
         print('=' * 80)
-        print('ERROR with %s:' % func.__name__)
+        print('ERROR with %s: (report_id: %s)' % (func.__name__, kwargs.get('report_id')))
         print('=' * 80)
         Session.rollback()
     finally:
