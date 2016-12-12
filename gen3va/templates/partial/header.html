@@ -3,35 +3,23 @@
         <div class="container">
             <div class="navbar-header">
                 <a href="">
-                    <img src="static/images/gen3va_logo.png"/>
+                    <img src="http://lincs-dcic.org/images/dcic-logo/DCIC_250x188.png">
                 </a>
                 <h1>
-                    <a href="">GEN3VA</a>
+                    <a href="">LINCS Drugs MoA Landing Pages</a>
                 </h1>
             </div>
             <ul class="nav navbar-nav navbar-right">
                 <li class="first">
-                    <a href="get-started"
-                       class="{{ 'highlight' if menu_item == 'get-started' else '' }}">
-                        Get Started
-                    </a>
-                </li>
-                <li>
-                    <a href="collections"
-                       class="{{ 'highlight' if menu_item == 'collections' else '' }}">
-                        Collections
-                    </a>
-                </li>
-                <li>
-                    <a href="upload/combined"
-                       class="{{ 'highlight' if menu_item == 'upload' else '' }}">
-                        Upload
+                    <a href=""
+                       class="{{ 'highlight' if menu_item == '' else '' }}">
+                        Search
                     </a>
                 </li>
                 <li>
                     <a href="documentation"
                        class="{{ 'highlight' if menu_item == 'documentation' else '' }}">
-                        Docs
+                        About
                     </a>
                 </li>
                 <li>
@@ -40,16 +28,6 @@
                         Stats
                     </a>
                 </li>
-                {% if config.user and config.user.is_authenticated %}
-                    <li>
-                        <a href="admin">{{ config.user.name }}</a>
-                    </li>
-                    <li>
-                        <form action='logout' method='POST'>
-                            <button name='logout' type='submit'>Logout</button>
-                        </form>
-                    </li>
-                {% endif %}
             </ul>
         </div>
     </div>

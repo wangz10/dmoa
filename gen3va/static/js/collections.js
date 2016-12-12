@@ -1,8 +1,8 @@
 $(function() {
     var dataTable = $('table').dataTable({
-        bPaginate: false,
+        bPaginate: true,
         // Initialize sorted by number of signatures.
-        order: [[ 1, 'desc' ]]
+        order: [[ 0, 'asc' ]]
     });
     $('.dataTables_filter').hide();
     $('#search-box').keyup(function() {
