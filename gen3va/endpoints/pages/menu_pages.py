@@ -19,30 +19,34 @@ menu_pages = Blueprint('menu_pages',
 # Main pages
 # ----------------------------------------------------------------------------
 
-@menu_pages.route('/', methods=['GET'])
-def index():
-    curator_name = request.args.get('curator')
-    if curator_name:
-        bio_categories = database.get_bio_categories_by_curator(curator_name)
-        # We don't need to show the curator when the user has already elected
-        # to see only signatures by a specific curator.
-        curators = None
-    else:
-        bio_categories = database.get_bio_categories()
-        curators = _curators_with_approved_reports()
-    bio_category_names = json.dumps([cat.name for cat in bio_categories])
-    return render_template('index.html',
-                           curators=curators,
-                           curator_name=curator_name,
-                           bio_category_names=bio_category_names,
-                           bio_categories=bio_categories)
+# @menu_pages.route('/', methods=['GET'])
+# def index():
+#     curator_name = request.args.get('curator')
+#     if curator_name:
+#         bio_categories = database.get_bio_categories_by_curator(curator_name)
+#         # We don't need to show the curator when the user has already elected
+#         # to see only signatures by a specific curator.
+#         curators = None
+#     else:
+#         bio_categories = database.get_bio_categories()
+#         curators = _curators_with_approved_reports()
+#     bio_category_names = json.dumps([cat.name for cat in bio_categories])
+#     return render_template('index.html',
+#                            curators=curators,
+#                            curator_name=curator_name,
+#                            bio_category_names=bio_category_names,
+#                            bio_categories=bio_categories)
 
-
-@menu_pages.route('/collections', methods=['GET'])
-def collections():
+@menu_pages.before_app_first_request
+def get_globals():
+    global tags, d_pert_name
     tags = database.get_all(Tag)
     d_pert_name = _get_pertid_names(tags)
     print len(tags), len(d_pert_name)
+    return
+
+@menu_pages.route('/', methods=['GET'])
+def collections():
     return render_template('pages/collections.html',
                            tags=tags,
                            d_pert_name=d_pert_name,
