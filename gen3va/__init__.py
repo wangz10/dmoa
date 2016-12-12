@@ -58,7 +58,7 @@ from gen3va import database, report_builder
 def build_all_reports():
     # Get all tags 
     tags = database.get_all(Tag)
-    print [tag.name for tag in tags]
+    # print [tag.name for tag in tags]
     for tag in tags:
         if tag.name.startswith('BRD-'):
             report_builder.build(tag, category='cell')

@@ -27,6 +27,16 @@ def get(class_, value, key='id'):
             .first()
 
 
+def get_many(klass, values, key='id'):
+    """Gets entities whose column values are in values.
+    """
+    with session_scope() as session:
+        return session\
+            .query(klass)\
+            .filter(getattr(klass, key).in_(values))\
+            .all()
+
+
 def get_all(klass):
     """Gets all entities of a specific class.
     """

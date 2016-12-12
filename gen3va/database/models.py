@@ -4,6 +4,13 @@ Additional ORMs for the DrugPage app.
 from collections import OrderedDict
 from substrate import db
 
+def isnull(value):
+    if value != 'NULL' and value is not None:
+        return False
+    else:
+        return True
+
+
 class Drug(db.Model):
 
     __tablename__ = 'drug'
@@ -37,10 +44,10 @@ class Drug(db.Model):
         d = OrderedDict()
         d['pert_id'] = self.pert_id
         d['Name'] = self.pert_iname
-        if self.alt_name != 'NULL':
+        if not isnull(self.alt_name):
             d['Synonyms'] = self.alt_name.replace('|', '; ')
         d['Collection'] = self.pert_collection
-        if self.pert_summary != 'NULL':
+        if not isnull(self.pert_summary):
             d['Summary'] = self.pert_summary
         d['Canonical SMILES'] = self.canonical_smiles
         d['InChI key'] = self.inchi_key
@@ -52,15 +59,15 @@ class Drug(db.Model):
     def get_external_links(self):
         '''Get all the external links and text to display.'''
         d = OrderedDict()
-        if self.pubchem_cid != 'NULL':
+        if not isnull(self.pubchem_cid):
             d['PubChem'] = (self.pubchem_cid, 
                 'https://pubchem.ncbi.nlm.nih.gov/compound/%s' % self.pubchem_cid)
 
-        if self.pert_url != 'NULL':
+        if not isnull(self.pert_url):
             pert_url = self.pert_url.split(',')[0]
             d['Wikipedia'] = (pert_url, pert_url)
 
-        if self.LSM_id != 'NULL':
+        if not isnull(self.LSM_id):
             d['LIFE'] = (self.LSM_id, 
                 'http://life.ccs.miami.edu/life/summary?mode=SmallMolecule&source=LINCS&input=%s' % self.LSM_id)
 

@@ -34,6 +34,19 @@ def build(tag, category, reanalyze=False):
         _build(report.id, category)
 
 
+def rebuild(tag, category):
+    """Rebuild report for a tag. Used when the report is not complete
+    """
+    print('Rebuilding report.')
+    report = tag.approved_report
+    with session_scope() as session:
+        report.reset(reanalyze=False)
+        report.category = category
+        session.merge(report)
+        session.commit()
+    _build(report.id, category, wait_till_done=False)
+    return
+
 def build_custom(tag, gene_signatures, report_name, category):
     """Builds a custom report.
     """
@@ -47,7 +60,7 @@ def build_custom(tag, gene_signatures, report_name, category):
     return report.id
 
 
-def _build(report_id, category):
+def _build(report_id, category, wait_till_done=True):
     """Builds report, each visualization in its own subprocess.
     """
     # Each process should be completely responsible for its own DB connection.
@@ -90,7 +103,8 @@ def _build(report_id, category):
     )
     processes.append(p4)
     [p.start() for p in processes]
-    [p.join() for p in processes]
+    if wait_till_done:
+        [p.join() for p in processes]
     return
 
 

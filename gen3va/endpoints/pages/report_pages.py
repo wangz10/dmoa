@@ -43,6 +43,13 @@ def view_approved_report(tag_name):
     if not tag:
         abort(404)
     report = tag.approved_report
+    print tag.name
+    print report.id
+    if not report.complete(Config.SUPPORTED_ENRICHR_LIBRARIES):
+        print 'Report for %s is not complete, building...' % tag.name
+        print len(report.heat_maps)
+        print len(report.enrichr_heat_maps)
+        report_builder.rebuild(tag, category='cell')
     return render_template('pages/report.html',
                            tag=tag,
                            drug=drug,

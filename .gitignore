@@ -18,7 +18,8 @@ clustergrammer_payload*
 scripts/*.csv
 scripts/*.txt
 scripts/*.png
-scripts/euclid.sql
+scripts/*.sql
+!scripts/euclid.schema.sql
 
 # Chrome Extension zip file
 *.zip

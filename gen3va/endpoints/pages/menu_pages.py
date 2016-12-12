@@ -42,6 +42,7 @@ def index():
 def collections():
     tags = database.get_all(Tag)
     d_pert_name = _get_pertid_names(tags)
+    print len(tags), len(d_pert_name)
     return render_template('pages/collections.html',
                            tags=tags,
                            d_pert_name=d_pert_name,
@@ -101,9 +102,7 @@ def _curators_with_approved_reports():
 def _get_pertid_names(tags):
   """Returns a dict with pert_id as key and pert_iname as value.
   """
-  d = {}
-  for tag in tags:
-      drug = database.get(Drug, tag.name, 'pert_id')
-      if drug:
-          d[drug.pert_id] = drug.pert_iname
+  tag_names = map(lambda x:x.name, tags)
+  drugs = database.get_many(Drug, tag_names, 'pert_id')
+  d = {drug.pert_id: drug.pert_iname for drug in drugs}
   return d
