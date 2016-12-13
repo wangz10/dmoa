@@ -281,7 +281,7 @@ caption {
  * header, content, footer
  * ----------------------------- */
 #header {
-  background-color: #17406B;
+  background-color: #0089A7;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
   color: white;
   padding: 10px 0;
@@ -305,7 +305,7 @@ caption {
 #header .nav.navbar-nav.navbar-right a:hover,
 #header .nav.navbar-nav.navbar-right a:focus {
   opacity: .8;
-  background-color: #17406B;
+  background-color: #0089A7;
 }
 #header .nav.navbar-nav.navbar-right a.highlight {
   color: #90caf9;
@@ -348,8 +348,8 @@ caption {
   opacity: .8;
 }
 #footer {
-  background-color: #17406B;
-  border-top: 10px solid #103359;
+  background-color: #0089A7;
+  border-top: 10px solid #00708F;
 }
 #footer a,
 #footer li,
