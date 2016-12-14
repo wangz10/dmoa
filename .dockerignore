@@ -5,3 +5,12 @@ tests/
 
 softfile/
 gen3va/static/softfile/
+
+# Data in scripts/ for the database
+scripts/*
+
+*.DS_Store
+
+# Python
+*.pyc
+venv/

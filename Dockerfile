@@ -41,6 +41,6 @@ RUN apt-get clean
 
 EXPOSE 80
 
-ADD . /gen3va
+ADD . /dmoa
 
-CMD /gen3va/boot.sh
+CMD /dmoa/boot.sh
