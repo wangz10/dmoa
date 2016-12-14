@@ -6,7 +6,7 @@ import os
 
 class Config(object):
 
-    with open('gen3va/dev.conf') as f:
+    with open('gen3va/prod.conf') as f:
         lines = [x for x in f.read().split('\n')]
 
     DEBUG = lines[1] == 'True'
@@ -17,7 +17,7 @@ class Config(object):
     else:
         SERVER_FILE_ROOT = root + '/gen3va/gen3va'
 
-    BASE_URL = '/gen3va'
+    BASE_URL = '/dmoa'
     BASE_API_URL = BASE_URL + '/api/1.0'
     BASE_PCA_URL = BASE_URL + '/pca'
     BASE_CLUSTER_URL = BASE_URL + '/cluster'

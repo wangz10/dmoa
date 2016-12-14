@@ -8,9 +8,8 @@ from flask.ext.login import LoginManager, user_logged_out
 from gen3va.config import Config
 from substrate import User, db as substrate_db
 
-
 app = Flask(__name__,
-            static_url_path='/gen3va/static',
+            static_url_path=Config.BASE_URL + '/static',
             static_folder='static')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI
