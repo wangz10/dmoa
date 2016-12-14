@@ -16,25 +16,25 @@ report_pages = Blueprint('report_pages',
                          url_prefix=Config.REPORT_URL)
 
 
+# @report_pages.route('/<string:tag_name>', methods=['GET'])
+# def view_reports_associated_with_tag(tag_name):
+#     """Renders page that lists all reports associated with a tag.
+#     """
+#     tag = database.get(Tag, tag_name, 'name')
+#     if not tag:
+#         abort(404)
+#     has_no_reports = False
+#     if len(tag.reports) == 0:
+#         has_no_reports = True
+#     has_enough_signatures = True
+#     if len(tag.gene_signatures) < 3:
+#         has_enough_signatures = False
+#     return render_template('pages/reports-for-tag.html', tag=tag,
+#                            has_no_reports=has_no_reports,
+#                            has_enough_signatures=has_enough_signatures)
+
+
 @report_pages.route('/<string:tag_name>', methods=['GET'])
-def view_reports_associated_with_tag(tag_name):
-    """Renders page that lists all reports associated with a tag.
-    """
-    tag = database.get(Tag, tag_name, 'name')
-    if not tag:
-        abort(404)
-    has_no_reports = False
-    if len(tag.reports) == 0:
-        has_no_reports = True
-    has_enough_signatures = True
-    if len(tag.gene_signatures) < 3:
-        has_enough_signatures = False
-    return render_template('pages/reports-for-tag.html', tag=tag,
-                           has_no_reports=has_no_reports,
-                           has_enough_signatures=has_enough_signatures)
-
-
-@report_pages.route('/approved/<string:tag_name>', methods=['GET'])
 def view_approved_report(tag_name):
     """Renders approved report page.
     """
