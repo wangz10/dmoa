@@ -11,7 +11,8 @@ conn = MongoClient('mongodb://146.203.54.131:27017/')
 
 ## 0. Get the genes first
 coll = conn['LINCS_L1000_genes']['genes']
-genes = coll.find_one({'tag': 'GSE70138'})['geneSymbol']
+# genes = coll.find_one({'tag': 'GSE70138'})['geneSymbol']
+genes = coll.find_one({'tag': 'LINCScloud'})['geneSymbol']
 genes = np.array(genes)
 print len(genes), genes[:10]
 
@@ -109,9 +110,12 @@ for i in range(n_sigs):
 						'disease': None,
 						## optional metadata
 						'metadata[pert_id]': doc['pert_id'],
-						'metadata[dose]': doc['pert_dose'],
-						'metadata[time]': doc['pert_time'],
+						'metadata[dose]': '%.1f' % float(doc['pert_dose']),
+						'metadata[time]': '%d' % int(float(doc['pert_time'])),
 						'metadata[sig_id]': doc['sig_id'],
+						# 'metadata[pvalue]': '%.3f' % doc['pvalue'],
+						'metadata[pvalue]': doc['pvalue']
+
 					}
 					# print doc['sig_id']
 					
