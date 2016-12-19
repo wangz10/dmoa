@@ -61,6 +61,19 @@ def build_all_reports():
     for tag in tags:
         if tag.name.startswith('BRD-'):
             report_builder.build(tag, category='cell')
+
+    # Count tags with incomplete reports
+    c = 0
+    for tag in tags:
+        report = tag.approved_report
+        if not report.complete(Config.SUPPORTED_ENRICHR_LIBRARIES):
+            c += 1
+    print 'Number of tags with incomplete reports: %d' % c
+    # Rebuild
+    for tag in tags:
+        report = tag.approved_report
+        if not report.complete(Config.SUPPORTED_ENRICHR_LIBRARIES):
+            report_builder.rebuild(tag, category='cell', wait_till_done=True)
     return
 
 # User authentication

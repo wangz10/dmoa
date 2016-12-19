@@ -34,7 +34,7 @@ def build(tag, category, reanalyze=False):
         _build(report.id, category)
 
 
-def rebuild(tag, category):
+def rebuild(tag, category, wait_till_done=False):
     """Rebuild report for a tag. Used when the report is not complete
     """
     print('Rebuilding report.')
@@ -44,7 +44,7 @@ def rebuild(tag, category):
         report.category = category
         session.merge(report)
         session.commit()
-    _build(report.id, category, wait_till_done=False)
+    _build(report.id, category, wait_till_done=wait_till_done)
     return
 
 def build_custom(tag, gene_signatures, report_name, category):
