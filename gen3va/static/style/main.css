@@ -497,3 +497,6 @@ div.dataTables_wrapper .pagination > .active > span:hover {
   font-weight: 100;
   margin-bottom: 0;
 }
+label select.input-sm {
+  height: 40px !important;
+}

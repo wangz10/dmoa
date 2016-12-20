@@ -68,8 +68,8 @@ class Drug(db.Model):
             d['Wikipedia'] = (pert_url, pert_url)
 
         if not isnull(self.LSM_id):
-            d['LIFE'] = (self.LSM_id, 
-                'http://life.ccs.miami.edu/life/summary?mode=SmallMolecule&source=LINCS&input=%s' % self.LSM_id)
+            d['LINCS Data Portal'] = (self.LSM_id, 
+                ' http://lincsportal.ccs.miami.edu/SmallMolecules/#/view/%s' % self.LSM_id)
 
         d['SEP-L1000'] = (self.pert_id, 
             'http://maayanlab.net/SEP-L1000/#drug/%s' % self.pert_id)

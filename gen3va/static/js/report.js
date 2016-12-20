@@ -278,7 +278,10 @@ function createAndManageVisualizations(config) {
     /* Sets up DataTables instances.
      */
     function setupDataTables() {
-        $('table').DataTable({ iDisplayLength: 5 });
+        $('table').DataTable({ 
+            iDisplayLength: 5,
+            aLengthMenu: [5, 10, 25, 50, 100],  
+        });
     }
 
     /* Resizes every clustergram when the window is resized. Debounces to
