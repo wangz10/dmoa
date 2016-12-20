@@ -1,0 +1,62 @@
+{% block body %}
+{% set extraction_id = gene_signature.extraction_id %}
+
+<!-- The content in .modal-content for gene signatures -->
+
+
+<h4>sig_id is: {{ gene_signature.get_optional_metadata('sig_id').value|c_filter_empty }}</h4>
+
+<table class="table">
+	<caption>External Links and Downloads</caption>
+	<thead></thead>
+	<tbody>
+		<tr>
+			<td></td>
+			<td>Up</td>
+			<td>Down</td>
+			<td>Combined</td>
+		</tr>
+		<tr>
+			<td>
+				<span data-toggle="tooltip" title="Text file containing a gene list resulting from differential expression analysis.">Gene lists</span>
+			</td>
+			<td>
+				<a href="report/signature/download/{{extraction_id}}/up_genes">
+					<i class="fa fa-download"></i>
+				</a>
+			</td>
+			<td>
+				<a href="report/signature/download/{{extraction_id}}/down_genes">
+					<i class="fa fa-download"></i>
+				</a>
+			</td>
+			<td>
+				<a href="report/signature/download/{{extraction_id}}/combined_genes">
+					<i class="fa fa-download"></i>
+				</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<span data-toggle="tooltip" title="Perform enrichment analysis against over 70 gene set libraries with Enrichr, a popular gene set enrichment analysis tool.">Enrichr</span>
+			</td>
+			<td>
+				<a href="http://amp.pharm.mssm.edu/Enrichr/enrich?dataset=56u6" target="_blank">
+					<img src="static/images/targetapp/enrichr.png">
+				</a>
+			</td>
+			<td>
+				<a href="http://amp.pharm.mssm.edu/Enrichr/enrich?dataset=56u6" target="_blank">
+					<img src="static/images/targetapp/enrichr.png">
+				</a>
+			</td>
+			<td>
+				<a href="http://amp.pharm.mssm.edu/Enrichr/enrich?dataset=56u6" target="_blank">
+					<img src="static/images/targetapp/enrichr.png">
+				</a>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+{% endblock %}

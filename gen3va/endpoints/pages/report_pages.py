@@ -2,10 +2,10 @@
 """
 
 from flask import Blueprint, jsonify, redirect, request, render_template, \
-    url_for, abort
+    url_for, abort, make_response
 from flask.ext.login import login_required
 
-from substrate import Report, Tag
+from substrate import Report, Tag, GeneSignature
 from gen3va.database import Drug
 from gen3va.config import Config
 from gen3va import database, report_builder
@@ -54,6 +54,35 @@ def view_approved_report(tag_name):
                            tag=tag,
                            drug=drug,
                            report=report)
+
+@report_pages.route('/signature/<string:extraction_id>', methods=['GET'])
+def view_gene_signature(extraction_id):
+    """Modal for gene signature.
+    """
+    gene_signature = database.get(GeneSignature, extraction_id, 'extraction_id')
+    return render_template('pages/gene-signature.html',
+                            gene_signature=gene_signature)
+
+@report_pages.route('/signature/download/<string:extraction_id>/<string:direction>', methods=['GET'])
+def download_gene_list(extraction_id, direction):
+    """Generate txt file for gene lists in gene signatures.
+    direction should be attr name in one of ('combined_genes', 'up_genes', 'down_genes')
+    """
+    gene_signature = database.get(GeneSignature, extraction_id, 'extraction_id')
+    gene_list = map(lambda x: x.gene.name, getattr(gene_signature, direction))
+    # Make a file on-the-fly
+    gene_list = '\n'.join(gene_list)
+    filename = '%s-%s.txt' % (extraction_id, direction)
+
+    response = make_response(gene_list)
+    response.headers["Content-Disposition"] = "attachment; filename=%s" % filename
+    return response
+
+@report_pages.route('/signature/enrichr/<string:extraction_id>/<string:direction>', methods=['GET'])
+def enrichr_gene_list(extraction_id, direction):
+    """Get Enrichr result for gene lists in gene signatures.
+    """
+    raise NotImplementedError
 
 
 @report_pages.route('/<int:report_id>/<string:tag_name>', methods=['GET'])

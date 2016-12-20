@@ -34,6 +34,22 @@
                 report.enrichr_heat_maps|c_to_json|safe
             }}
         });
+
+        // want to have a js to create and show modal only when <a> is clicked.
+        // showModal(sig_id);
+        $(document).ready(function(){
+
+
+        $('a.modalBtn').on('click', function(e){
+            var extraction_id = $(this).attr('data-src');
+            var modal_url = 'report/signature/' + extraction_id
+            // console.log(extraction_id)
+            // $("#myModal iframe").attr({'src':modal_url})
+            $(".modal-body").load(modal_url)
+
+        });
+
+        })
     </script>
 
     <div class='page' id='report-page'>
@@ -112,15 +128,13 @@
                                 <tr>
                                     <td class='index'>{{ loop.index }}</td>
                                     <td class='title'>
-                                        {% if gene_signature.is_from_geo %}
-                                            <a data-toggle='tooltip'
-                                               title='Results page for the processed gene signature'
-                                               href='{{ config.RESULTS_URL }}/{{ gene_signature.extraction_id }}'>
-                                                 {{ gene_signature.name }}
-                                            </a>
-                                        {% else %}
+                                        <a data-toggle='modal'
+                                           class='modalBtn'
+                                           title='External links and downloads'
+                                           data-target="#signature-modal"
+                                           data-src='{{ gene_signature.extraction_id }}'>
                                             {{ gene_signature.get_optional_metadata('sig_id').value|c_filter_empty }}
-                                        {% endif %}
+                                        </a>
                                     </td>
                                     <td class='organism'>
                                         {{ gene_signature.get_optional_metadata('cell').value|c_filter_empty }}
@@ -202,5 +216,19 @@
             </div>
         </div>
     </div>
+
+
+<!-- Modals for individual signatures-->
+<div class="modal fade" id="signature-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">External Links and Downloads</h4>
+      </div>
+      <div class="modal-body"></div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
