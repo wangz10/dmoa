@@ -1,0 +1,8 @@
+td > a > img {
+	width: 15px;
+	max-width: 100%;
+	vertical-align: inherit;
+}
+td > a {
+	cursor: pointer;
+}

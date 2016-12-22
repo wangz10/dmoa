@@ -143,6 +143,9 @@
   font-size: 14px;
   font-weight: bold;
 }
+#report-page tbody a.modal-btn {
+  cursor: pointer;
+}
 #report-page #pca-container {
   border: 1px solid #eeeeee;
 }

@@ -11,6 +11,7 @@
 {% set combined_genes = gene_signature.combined_genes|map(attribute='gene') %}
 {% set combined_genes = combined_genes|map(attribute='name')|join('\n') %}
 
+<link rel="stylesheet" type="text/css" href="static/style/modal.css">
 <!-- Store variables in meta tags -->
 <meta id="extraction_id" data-name="{{ extraction_id }}">
 <meta id="up_genes" data-name="{{ up_genes }}">
@@ -18,7 +19,16 @@
 <meta id="combined_genes" data-name="{{ combined_genes }}">
 
 <!-- The content in .modal-content for gene signatures -->
-<h4>Signature ID: {{ gene_signature.get_optional_metadata('sig_id').value|c_filter_empty }}</h4>
+<dl class="dl-horizontal">
+	<dt>Signature ID</dt>
+	<dd>{{ gene_signature.get_optional_metadata('sig_id').value|c_filter_empty }}</dd>
+	<dt>Cell</dt>
+	<dd>{{ gene_signature.get_optional_metadata('cell').value|c_filter_empty }}</dd>
+	<dt>Dose</dt>
+	<dd>{{ gene_signature.get_optional_metadata('dose').value|c_filter_empty }}</dd>
+	<dt>p-value</dt>
+	<dd>{{ gene_signature.get_optional_metadata('pvalue').value|c_filter_empty }}</dd>
+</dl>
 
 <table class="table">
 	<caption>External Links and Downloads</caption>
@@ -26,9 +36,9 @@
 	<tbody>
 		<tr>
 			<td></td>
-			<td>Up</td>
-			<td>Down</td>
-			<td>Combined</td>
+			<td>Up({{ gene_signature.up_genes|length }})</td>
+			<td>Down({{ gene_signature.down_genes|length }})</td>
+			<td>Combined({{ gene_signature.combined_genes|length }})</td>
 		</tr>
 		<tr>
 			<td>
@@ -88,6 +98,8 @@ $(".enrichr-btn").on('click', function(e){
 	var description = extraction_id + '-' + key;
 	enrich({list: genes, description: description, popup: true})
 });
+
+$('[data-toggle="tooltip"]').tooltip();
 
 function enrich(options) { // http://amp.pharm.mssm.edu/Enrichr/#help
     var defaultOptions = {
