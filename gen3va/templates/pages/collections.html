@@ -5,6 +5,11 @@
 {% block body %}
 
     <script src="static/js/collections.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function(){
+        $("#stat").load('statistics')
+    })
+    </script>
 
     <div class='page' id='collections-page'>
 
@@ -39,6 +44,7 @@
                 </tbody>
             </table>
         </div>
+        <div id="stat"></div>
     </div>
 
 {% endblock %}

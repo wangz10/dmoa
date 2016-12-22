@@ -1,8 +1,3 @@
-{% extends 'wrapper.html' %}
-
-{% block title %}Statistics{% endblock %}
-
-{% block body %}
 
     <script src='static/lib/highcharts/highcharts.js'></script>
     <script src='static/js/statistics.js'></script>
@@ -13,12 +8,8 @@
     </script>
 
     <div class='page' id='statistics-page'>
-        <div class='ribbon'>
-            <div class='container'>
-                <h1>Statistics</h1>
-            </div>
-        </div>
         <div class='container'>
+            <h1>Statistics</h1>
             <div class='row'>
                 <div class='col-md-6'>
                     <h4>Gene signatures by cell lines</h4>
@@ -55,5 +46,3 @@
             </div>
         </div>
     </div>
-
-{% endblock %}
