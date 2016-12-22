@@ -11,7 +11,7 @@ function buildStats(stats) {
 
     var categories = [],
         series = [],
-        platform_counts = stats.platform_counts;
+        platform_counts = stats.cell_counts;
 
     series[0] = {
         data: [],
@@ -34,7 +34,7 @@ function buildStats(stats) {
         } else {
             series[0].data.push(Math.log(obj.count) / Math.log(10));
         }
-        categories.push(obj.platform);
+        categories.push(obj.cell);
     });
 
     $('#platforms-bar-chart').highcharts({

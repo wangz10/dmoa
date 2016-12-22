@@ -112,33 +112,28 @@ def get_statistics():
     """Returns object with DB statistics for about page.
     """
     with session_scope() as session:
-        tags = []
-        for tag in get_all(Tag):
-            tags.append({
-                'name': tag.name,
-                'num_gene_signatures': len(tag.gene_signatures)
-            })
+        meta_counts = session\
+            .execute("""SELECT `name`, COUNT(DISTINCT `value`) AS `count`
+                FROM `optional_metadata` 
+                WHERE `name` IN ('cell', 'dose', 'time') 
+                GROUP BY `name`""")\
+            .fetchall()
+        meta_counts = dict(meta_counts)    
 
-        platforms = session.query(sa.func.distinct(GeoDataset.platform))
-        platform_counts = []
-        for tpl in platforms:
-            platform = tpl[0]
-            c = session.query(GeneSignature, SoftFile, GeoDataset)\
-                .filter(SoftFile.dataset_fk == GeoDataset.id)\
-                .filter(SoftFile.gene_signature_fk == GeneSignature.id)\
-                .filter(GeoDataset.platform == platform)\
-                .count()
-            platform_counts.append({
-                'platform': platform,
-                'count': c
-            })
+        cell_counts = session\
+            .execute("""SELECT `value`, COUNT(`value`) AS `count` 
+                FROM `optional_metadata` 
+                WHERE `name`='cell' 
+                GROUP BY `value`
+                """)\
+            .fetchall()
+        cell_counts = [{'cell': item[0], 'count': item[1]} for item in cell_counts]
 
         return {
             'num_gene_signatures': count(GeneSignature),
-            'num_gene_lists': count(GeneList),
-            'num_tags': count(Tag),
             'num_reports': count(Report),
-            'num_platforms': len(platform_counts),
-            'platform_counts': platform_counts,
-            'tags': tags
+            'num_cells': meta_counts['cell'],
+            'num_doses': meta_counts['dose'],
+            'num_times': meta_counts['time'],
+            'cell_counts': cell_counts
         }

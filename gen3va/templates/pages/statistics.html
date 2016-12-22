@@ -21,7 +21,7 @@
         <div class='container'>
             <div class='row'>
                 <div class='col-md-6'>
-                    <h4>Gene signatures by platform</h4>
+                    <h4>Gene signatures by cell lines</h4>
                     <p class='instruction'>Log10 scale (1 rendered as 0.175)</p>
                     <div id='platforms-bar-chart'></div>
                 </div>
@@ -29,28 +29,26 @@
                     <h4>Counts</h4>
                     <table class='table'>
                         <tr>
-                            <td>Gene signatures</td>
-                            <td>{{ stats.num_gene_signatures }}</td>
-                        </tr>
-                        <tr>
-                            <td>Gene lists</td>
-                            <td>{{ stats.num_gene_lists }}</td>
-                        </tr>
-                        <tr>
-                            <td>Tags</td>
-                            <td>
-                                <a href='tag'>{{ stats.num_tags }}</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Reports</td>
+                            <td>Drugs</td>
                             <td>
                                 <a href='report'>{{ stats.num_reports }}</a>
                             </td>
                         </tr>
+                        <tr>
+                            <td>Gene signatures</td>
+                            <td>{{ stats.num_gene_signatures }}</td>
+                        </tr>
+                        <tr>
+                            <td>Dosages</td>
+                            <td>{{ stats.num_doses }}</td>
+                        </tr>
+                        <tr>
+                            <td>Time points</td>
+                            <td>{{ stats.num_times }}</td>
+                        </tr>
                         <tr class='last'>
-                            <td>Platforms</td>
-                            <td>{{ stats.num_platforms }}</td>
+                            <td>Cell lines</td>
+                            <td>{{ stats.num_cells }}</td>
                         </tr>
                     </table>
                 </div>
