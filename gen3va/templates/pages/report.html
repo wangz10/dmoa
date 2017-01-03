@@ -53,7 +53,7 @@
                 <div class='report-metadata'>
                     <h1>
                     {% if report.is_approved %}
-                        <strong>{{ drug.pert_iname|upper }}</strong> <span>report</span>
+                        <strong>{{ drug.pert_iname|upper }} ({{ tag.name }})</strong> <span>report</span>
                     {% else %}
                         <strong>{{ report.name }}</strong><span>, custom report for {{ tag.name|upper }}</span>
                     {% endif %}

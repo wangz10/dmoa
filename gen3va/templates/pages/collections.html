@@ -29,6 +29,7 @@
                 <thead>
                     <tr>
                         <th>Drug/Small Molecule Compound</th>
+                        <th>Pert ID</th>
                         <th>Signatures</th>
                     </tr>
                 </thead>
@@ -38,6 +39,7 @@
                         <td>
                             <a href='{{ config.REPORT_URL }}/{{ tag.name }}'>{{ d_pert_name[tag.name]|upper }}</a>
                         </td>
+                        <td>{{ tag.name }}</td>
                         <td>{{ tag.gene_signatures|length }}</td>
                     </tr>
                 {% endfor %}
