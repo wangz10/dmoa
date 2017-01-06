@@ -107,6 +107,7 @@
                             <tr>
                                 <th></th>
                                 <th>Signature ID</th>
+                                <th>p-value</th>
                                 <th>Cell</th>
                                 <th>Dose</th>
                             </tr>
@@ -124,6 +125,9 @@
                                            data-src='{{ gene_signature.extraction_id }}'>
                                             {{ gene_signature.get_optional_metadata('sig_id').value|c_filter_empty }}
                                         </a>
+                                    </td>
+                                    <td class="organism">
+                                        {{ gene_signature.get_optional_metadata('pvalue').value|c_filter_empty }}
                                     </td>
                                     <td class='organism'>
                                         {{ gene_signature.get_optional_metadata('cell').value|c_filter_empty }}
