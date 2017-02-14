@@ -41,19 +41,22 @@ def view_approved_report(tag_name):
     tag = database.get(Tag, tag_name, 'name')
     drug = database.get(Drug, tag_name, 'pert_id')
     if not tag:
-        abort(404)
-    report = tag.approved_report
-    print tag.name
-    print report.id
-    if not report.complete(Config.SUPPORTED_ENRICHR_LIBRARIES):
-        print 'Report for %s is not complete, building...' % tag.name
-        print len(report.heat_maps)
-        print len(report.enrichr_heat_maps)
-        report_builder.rebuild(tag, category='cell')
-    return render_template('pages/report.html',
-                           tag=tag,
-                           drug=drug,
-                           report=report)
+    #     abort(404)
+        return render_template('pages/report-empty.html',
+                                drug=drug)
+    else:
+        report = tag.approved_report
+        print tag.name
+        print report.id
+        if not report.complete(Config.SUPPORTED_ENRICHR_LIBRARIES):
+            print 'Report for %s is not complete, building...' % tag.name
+            print len(report.heat_maps)
+            print len(report.enrichr_heat_maps)
+            report_builder.rebuild(tag, category='cell')
+        return render_template('pages/report.html',
+                               tag=tag,
+                               drug=drug,
+                               report=report)
 
 @report_pages.route('/signature/<string:extraction_id>', methods=['GET'])
 def view_gene_signature(extraction_id):

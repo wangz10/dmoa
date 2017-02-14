@@ -3,7 +3,7 @@
 
 import json
 
-from flask import abort, Blueprint, render_template, request
+from flask import abort, Blueprint, render_template, request, Response
 
 from substrate import BioCategory, Curator, Tag
 from gen3va.database import Drug
@@ -39,19 +39,33 @@ menu_pages = Blueprint('menu_pages',
 
 @menu_pages.before_app_first_request
 def get_globals():
-    global d_pert_name, d_pertid_nsigs
+    global drugs_meta
     tags = database.get_all(Tag)
     d_pertid_nsigs = {tag.name: len(tag.gene_signatures) for tag in tags}
     d_pert_name = database.get_all_drug_meta()
+    drugs_meta = [None] * len(d_pert_name)
+    i = 0
+    for pert_id, name in d_pert_name.items():
+        nsigs = d_pertid_nsigs.get(pert_id, 0)
+        drugs_meta[i] = {'pert_id': pert_id, 'name': name, 'nsigs': nsigs}
+        i += 1
+
+    drugs_meta = sorted(drugs_meta, key=lambda x: x['name'])
     print len(tags), len(d_pert_name)
     return
 
 @menu_pages.route('/', methods=['GET'])
 def collections():
     return render_template('pages/collections.html',
-                           d_pertid_nsigs=d_pertid_nsigs,
-                           d_pert_name=d_pert_name,
+                           # drugs_meta=drugs_meta,
                            menu_item='collections')
+
+
+@menu_pages.route('/drugs', methods=['GET'])
+def get_all_drugs():
+    """Returns a json object for dataTable to (defer)render.
+    """
+    return Response(json.dumps({'data':drugs_meta}), mimetype='application/json')
 
 
 @menu_pages.route('/get-started', methods=['GET'])

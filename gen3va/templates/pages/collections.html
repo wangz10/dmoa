@@ -33,18 +33,18 @@
                         <th>Signatures</th>
                     </tr>
                 </thead>
-                <tbody>
-                {% for tag in tags %}
+                <!-- <tbody>
+                {% for drug_meta in drugs_meta %}
                     <tr>
                         <td>
-                            <a href='{{ config.REPORT_URL }}/{{ tag.name }}'>{{ d_pert_name[tag.name]|upper }}</a>
+                            <a href='{{ config.REPORT_URL }}/{{ drug_meta["pert_id"] }}'>{{ drug_meta["name"]|upper }}</a>
                         </td>
-                        <td>{{ tag.name }}</td>
-                        <td>{{ tag.gene_signatures|length }}</td>
+                        <td>{{ drug_meta["pert_id"] }}</td>
+                        <td>{{ drug_meta["nsigs"] }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
-            </table>
+ -->            </table>
         </div>
         <div id="stat"></div>
     </div>
