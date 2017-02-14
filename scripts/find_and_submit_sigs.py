@@ -50,8 +50,13 @@ print grouped_sorted[:50]
 pert_id_counts = meta_df.reset_index().groupby('pert_id')['sig_id'].count()
 print pert_id_counts[:10]
 
-pert_ids_kept = pert_id_counts[pert_id_counts > 20].index.tolist()
+pert_ids_kept0 = pert_id_counts[pert_id_counts > 20].index.tolist()
+pert_ids_kept = pert_id_counts[(pert_id_counts <= 20) & (pert_id_counts > 5)].index.tolist()
+
+
 print 'Number of pert_id to keep: %d' % len(pert_ids_kept)
+print set(pert_ids_kept) & set(pert_ids_kept0)
+
 print grouped_sorted.shape
 grouped_sorted = grouped_sorted[pert_ids_kept].reset_index()
 print grouped_sorted.shape
@@ -72,7 +77,7 @@ print grouped_sorted[:50].loc[1, 'sig_id']
 
 # cur = coll.find({'pert_id': {'$in': pert_ids_kept}}, 
 # 	projection=projection)
-
+# '''
 essential_keys = set(['sigIdx', 'chdirFull', 'pert_id', 'cell_id', 'pert_desc', 'pert_dose', 'pert_time', 'sig_id'])
 
 for i in range(n_sigs):
@@ -124,3 +129,4 @@ for i in range(n_sigs):
 
 	if i % 100 == 0:
 		print i, n_sigs
+# '''

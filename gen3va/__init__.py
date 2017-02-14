@@ -58,7 +58,7 @@ from gen3va import database, report_builder
 def build_all_reports():
     # Get all tags 
     tags = database.get_all(Tag)
-    # print [tag.name for tag in tags]
+    print len([tag.name for tag in tags])
     # for tag in tags:
     #     if tag.name.startswith('BRD-'):
     #         report_builder.build(tag, category='cell')
@@ -67,14 +67,21 @@ def build_all_reports():
     # c = 0
     # for tag in tags:
     #     report = tag.approved_report
-    #     if not report.complete(Config.SUPPORTED_ENRICHR_LIBRARIES):
+    #     if report is None:
     #         c += 1
+    #     else:
+    #         if not report.complete(Config.SUPPORTED_ENRICHR_LIBRARIES):
+    #             c += 1
     # print 'Number of tags with incomplete reports: %d' % c
-    # # Rebuild
+    # Rebuild
     # for tag in tags:
     #     report = tag.approved_report
-    #     if not report.complete(Config.SUPPORTED_ENRICHR_LIBRARIES):
-    #         report_builder.rebuild(tag, category='cell', wait_till_done=True)
+    #     if report is None:
+    #         report_builder.build(tag, category='cell')
+            # report_builder.rebuild(tag, category='cell', wait_till_done=True)
+        # else:
+        #     if not report.complete(Config.SUPPORTED_ENRICHR_LIBRARIES):
+        #         report_builder.rebuild(tag, category='cell', wait_till_done=True)
     return
 
 # User authentication

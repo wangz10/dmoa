@@ -39,16 +39,17 @@ menu_pages = Blueprint('menu_pages',
 
 @menu_pages.before_app_first_request
 def get_globals():
-    global tags, d_pert_name
+    global d_pert_name, d_pertid_nsigs
     tags = database.get_all(Tag)
-    d_pert_name = _get_pertid_names(tags)
+    d_pertid_nsigs = {tag.name: len(tag.gene_signatures) for tag in tags}
+    d_pert_name = database.get_all_drug_meta()
     print len(tags), len(d_pert_name)
     return
 
 @menu_pages.route('/', methods=['GET'])
 def collections():
     return render_template('pages/collections.html',
-                           tags=tags,
+                           d_pertid_nsigs=d_pertid_nsigs,
                            d_pert_name=d_pert_name,
                            menu_item='collections')
 
@@ -103,10 +104,11 @@ def _curators_with_approved_reports():
             curators.append(curator)
     return curators
 
-def _get_pertid_names(tags):
-  """Returns a dict with pert_id as key and pert_iname as value.
-  """
-  tag_names = map(lambda x:x.name, tags)
-  drugs = database.get_many(Drug, tag_names, 'pert_id')
-  d = {drug.pert_id: drug.pert_iname for drug in drugs}
-  return d
+# def _get_pertid_names(tags):
+#   """Returns a dict with pert_id as key and pert_iname as value.
+#   """
+#   # tag_names = map(lambda x:x.name, tags)
+#   # drugs = database.get_many(Drug, tag_names, 'pert_id')
+#   drugs = database.get_all(Drug)
+#   d = {drug.pert_id: drug.pert_iname for drug in drugs}
+#   return d

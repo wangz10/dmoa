@@ -137,3 +137,16 @@ def get_statistics():
             'num_times': meta_counts['time'],
             'cell_counts': cell_counts
         }
+
+def get_all_drug_meta():
+    """Returns a dict {pert_id: pert_iname} for all the drugs.
+    """
+    with session_scope() as session:
+        d_pert_name = session\
+            .execute("""SELECT `pert_id`, `pert_iname` 
+                FROM `drug`
+                """)\
+            .fetchall()
+        d_pert_name = dict(d_pert_name)
+
+        return d_pert_name
