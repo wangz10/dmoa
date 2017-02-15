@@ -4,9 +4,33 @@
 
 {% block body %}
 
-    <script src="static/js/collections.js"></script>
     <script type="text/javascript">
     $(document).ready(function(){
+        var drugs_json = {{ drugs_json|safe }};
+
+        var dataTable = $('table').dataTable({
+            aaData: drugs_json['data'],
+            columns: [
+                {
+                    data: 'name', 
+                    render: function(data, type, full, meta){
+                        var pert_id = full['pert_id'];
+                        return '<a href="report/' + pert_id + '">' + data + '</a>';
+                    }
+                },
+                {data: 'pert_id'},
+                {data: 'nsigs'}
+            ],
+            bPaginate: true,
+            deferRender: true,
+            // Initialize sorted by number of signatures.
+            // order: [[ 0, 'asc' ]],
+        });
+        $('.dataTables_filter').hide();
+        $('#search-box').keyup(function() {
+           dataTable.fnFilter(this.value);
+        });
+
         $("#stat").load('statistics')
     })
     </script>

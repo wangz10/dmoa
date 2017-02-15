@@ -57,7 +57,7 @@ def get_globals():
 @menu_pages.route('/', methods=['GET'])
 def collections():
     return render_template('pages/collections.html',
-                           # drugs_meta=drugs_meta,
+                           drugs_json=json.dumps({'data':drugs_meta}),
                            menu_item='collections')
 
 
