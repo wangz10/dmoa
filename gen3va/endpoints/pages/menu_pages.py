@@ -95,6 +95,7 @@ def documentation():
 @menu_pages.route('/statistics', methods=['GET'])
 def statistics():
     stats = database.get_statistics()
+    stats['num_drugs'] = len(drugs_meta)
     stats_json = json.dumps(stats)
     return render_template('pages/statistics.html',
                            stats=stats,
