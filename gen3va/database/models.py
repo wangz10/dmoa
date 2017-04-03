@@ -75,3 +75,9 @@ class Drug(db.Model):
             'http://maayanlab.net/SEP-L1000/#drug/%s' % self.pert_id)
         return d
 
+    def get_structure_url(self):
+        if not isnull(self.LSM_id):
+            url = 'http://life.ccs.miami.edu/life/web/images/sm-images/400/%s.png' % self.LSM_id
+        else:
+            url = 'http://maayanlab.net/SEP-L1000/img/cpd-images/%s.png' % self.pert_id
+        return url
