@@ -1,5 +1,6 @@
 from database import \
     get,\
+    get_many,\
     get_all,\
     get_signatures_by_ids,\
     get_tags_by_curator,\
