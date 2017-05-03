@@ -1,6 +1,7 @@
 """Serves menu pages.
 """
 
+import os
 import json
 
 from flask import abort, Blueprint, render_template, request, Response
@@ -59,6 +60,10 @@ def collections():
     return render_template('pages/collections.html',
                            drugs_json=json.dumps({'data':drugs_meta}),
                            menu_item='collections')
+
+@menu_pages.route('/visualize', methods=['GET'])
+def visualize():
+    return render_template('pages/visualize.html', url=os.environ['EMBED_URL'])
 
 
 @menu_pages.route('/drugs', methods=['GET'])
