@@ -55,15 +55,15 @@ def get_globals():
     print len(tags), len(d_pert_name)
     return
 
-@menu_pages.route('/', methods=['GET'])
+@menu_pages.route('/search', methods=['GET'])
 def collections():
     return render_template('pages/collections.html',
                            drugs_json=json.dumps({'data':drugs_meta}),
                            menu_item='collections')
 
-@menu_pages.route('/visualize', methods=['GET'])
+@menu_pages.route('/', methods=['GET'])
 def visualize():
-    return render_template('pages/visualize.html', url=os.environ['EMBED_URL'])
+    return render_template('pages/visualize.html', url=os.environ['EMBED_URL'], menu_item='')
 
 
 @menu_pages.route('/drugs', methods=['GET'])
