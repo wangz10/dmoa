@@ -4,7 +4,30 @@
 
 {% block body %}
     
+    <script src='static/lib/highcharts/highcharts.js'></script>
+    <script src='static/lib/highcharts/highcharts-3d.js'></script>
+    <script src='static/lib/highcharts/highcharts-exporting.js'></script>
+
+    <script src='static/lib/d3/d3.js'></script>
     <script src='static/lib/underscore/underscore.js'></script>
+
+    <script src='static/js/report.js'></script>
+    <script>
+        createAndManageVisualizations({
+            barPlotDx: {{
+                drug.get_dx_counts()|safe
+                if drug.get_dx_counts()
+                else 'undefined'                
+            }},
+            barPlotRx: {{
+                drug.get_rx_counts()|safe
+                if drug.get_rx_counts()
+                else 'undefined'                
+            }},
+
+        });
+
+    </script>
 
     <div class='page' id='report-page'>
 
@@ -41,5 +64,29 @@
                 </div>
             </div>
         </div>
+        
+        <div class="container">
+            <!-- Diagnosis count -->
+            <div class='section'>
+                <h2>Diagnoses</h2>
+                <div class='description'>
+                    <p>
+                        Top diagnoses associated with {{ drug.pert_iname }}.
+                    </p>
+                </div>
+                <div id='dx-plot'></div>
+            </div>
+
+            <!-- Co-prescribed drugs count -->
+            <div class='section'>
+                <h2>Co-prescribed drugs</h2>
+                <div class='description'>
+                    <p>
+                        Top co-prescribed drugs of {{ drug.pert_iname }}.
+                    </p>
+                </div>
+                <div id='rx-plot'></div>
+            </div>
+        </div>        
 
 {% endblock %}

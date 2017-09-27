@@ -63,7 +63,7 @@ def collections():
 
 @menu_pages.route('/', methods=['GET'])
 def visualize():
-    return render_template('pages/visualize.html', url=os.environ['EMBED_URL'], menu_item='')
+    return render_template('pages/visualize.html', url=os.environ.get('EMBED_URL', None), menu_item='')
 
 
 @menu_pages.route('/drugs', methods=['GET'])

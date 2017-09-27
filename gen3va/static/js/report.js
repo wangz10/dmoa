@@ -7,6 +7,21 @@ function createAndManageVisualizations(config) {
         var elem;
         setupDataTables();
         resizeClustergramsOnWindowResize();
+        try {
+            elem = '#dx-plot';
+            plotBar(config.barPlotDx, 'dx-plot');
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
+        try {
+            elem = '#rx-plot';
+            plotBar(config.barPlotRx, 'rx-plot');
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
+
         plotPCA(config.pcaPlot);
         try {
             elem = '#genes-heat-map';
@@ -429,6 +444,60 @@ function createAndManageVisualizations(config) {
                 }
             });
         });
+    }
+
+    function plotBar(barplotObj, renderTo) {
+        var chart;
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: renderTo,
+                type: 'column',
+            },
+            legend: {
+                enabled: true,
+                // floating: true,
+                // layout: 'vertical',
+                // align: 'left',
+                // verticalAlign: 'top'
+            },
+            title: {
+                text: 'Bar plot'
+            },
+            xAxis: {
+                categories: barplotObj.categories,
+                labels: {
+                    enabled: true
+                },
+            },
+            yAxis: {
+                allowDecimals: false,
+                title: {
+                    text: 'Count'
+                },
+                min: 0,
+                max: barplotObj.counts[0]
+            },
+
+            series: [ {'name': barplotObj.name, 'data': barplotObj.counts} ],
+            plotOptions: {
+                series: {
+                    colorByPoint: true
+                }
+            },            
+            tooltip: {
+                useHTML: true,
+                backgroundColor: '#7FB800', // green
+                borderColor: '#7FB800',
+                borderRadius: 0,
+                shadow: false,
+                style: {
+                    color: 'white',
+                    fontFamily: 'Roboto',
+                    fontWeight: 'bold',
+                    padding: 6
+                }
+            }
+        })
     }
 
     /* Strip the preceding number, spaces, and hyphens from the names.

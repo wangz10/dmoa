@@ -27,11 +27,11 @@ cors = CORS(app)
 app.secret_key = 'CHANGE THIS IN THE FUTURE'
 
 
-@app.before_request
-def make_session_permanent():
-    """Sets Flask session to 'permanent', meaning 31 days.
-    """
-    flask_session.permanent = True
+# @app.before_request
+# def make_session_permanent():
+#     """Sets Flask session to 'permanent', meaning 31 days.
+#     """
+#     flask_session.permanent = True
 
 
 # Setup endpoints (Flask Blueprints)
@@ -40,14 +40,14 @@ def make_session_permanent():
 from gen3va import endpoints
 from gen3va.utils.jinjafilters import jinjafilters
 
-app.register_blueprint(endpoints.admin_pages)
-app.register_blueprint(endpoints.auth_pages)
+# app.register_blueprint(endpoints.admin_pages)
+# app.register_blueprint(endpoints.auth_pages)
 app.register_blueprint(endpoints.error_page)
 app.register_blueprint(endpoints.menu_pages)
 app.register_blueprint(endpoints.report_pages)
 app.register_blueprint(endpoints.tag_pages)
-app.register_blueprint(endpoints.download_api)
-app.register_blueprint(endpoints.upload_api)
+# app.register_blueprint(endpoints.download_api)
+# app.register_blueprint(endpoints.upload_api)
 app.register_blueprint(endpoints.signature_external_redirect_api)
 app.register_blueprint(endpoints.signature_api)
 app.register_blueprint(jinjafilters)
@@ -59,8 +59,8 @@ from gen3va import database, report_builder
 @app.before_first_request
 def build_all_reports():
     # Get all tags 
-    tags = database.get_all(Tag)
-    print len([tag.name for tag in tags])
+    # tags = database.get_all(Tag)
+    # print len([tag.name for tag in tags])
     # for tag in tags:
     #     if tag.name.startswith('BRD-'):
     #         report_builder.build(tag, category='cell')
@@ -88,24 +88,24 @@ def build_all_reports():
 
 # User authentication
 # ----------------------------------------------------------------------------
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'auth_pages.login'
+# login_manager = LoginManager()
+# login_manager.init_app(app)
+# login_manager.login_view = 'auth_pages.login'
 
 
-@login_manager.user_loader
-def load_user(user_id):
-    """Utility method for loading User for Flask-Login.
-    """
-    user = substrate_db.session.query(User).get(user_id)
-    app.config.user = user
-    return user
+# @login_manager.user_loader
+# def load_user(user_id):
+#     """Utility method for loading User for Flask-Login.
+#     """
+#     user = substrate_db.session.query(User).get(user_id)
+#     app.config.user = user
+#     return user
 
-@user_logged_out.connect_via(app)
-def unset_current_user(sender, user):
-    """When the user logs out, we need to unset this global variable.
-    """
-    app.config.user = None
+# @user_logged_out.connect_via(app)
+# def unset_current_user(sender, user):
+#     """When the user logs out, we need to unset this global variable.
+#     """
+#     app.config.user = None
 
 
 # Setup global variables that are available in Jinja2 templates

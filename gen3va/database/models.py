@@ -1,8 +1,12 @@
 '''
 Additional ORMs for the DrugPage app. 
 '''
+import json
 from collections import OrderedDict
 from substrate import db
+
+from gen3va.database.utils import session_scope
+
 
 def isnull(value):
     if value != 'NULL' and value is not None:
@@ -13,7 +17,7 @@ def isnull(value):
 
 class Drug(db.Model):
 
-    __tablename__ = 'drug'
+    __tablename__ = 'drug_repurposedb'
     pert_id = db.Column(db.String(32), primary_key=True)
     alt_name = db.Column(db.String(255))
     pert_iname = db.Column(db.String(255), nullable=False)
@@ -31,6 +35,11 @@ class Drug(db.Model):
     molecular_formula = db.Column(db.Text)
     molecular_wt = db.Column(db.Float)
     structure_url = db.Column(db.Text)
+    moa = db.Column(db.Text)
+    target = db.Column(db.Text)
+    phase = db.Column(db.Text)
+    ingredient_id = db.Column(db.Integer)
+
 
 
     def __init__(self, pert_id):
@@ -49,6 +58,15 @@ class Drug(db.Model):
         d['Collection'] = self.pert_collection
         if not isnull(self.pert_summary):
             d['Summary'] = self.pert_summary
+        if isnull(self.moa):
+            d['MOA'] = 'Unknown'
+        d['MOA'] = self.moa
+        if isnull(self.target):
+            d['Target(s)'] = 'Unknown'
+        d['Target(s)'] = self.target
+        if isnull(self.phase):
+            d['Phase'] = 'Unknown'
+        d['Phase'] = self.phase
         d['Canonical SMILES'] = self.canonical_smiles
         d['InChI key'] = self.inchi_key
         d['InChI string'] = self.inchi_string
@@ -81,3 +99,42 @@ class Drug(db.Model):
         else:
             url = 'http://maayanlab.net/SEP-L1000/img/cpd-images/%s.png' % self.pert_id
         return url
+
+    def get_rx_counts(self, limit=20):
+        with session_scope() as session:
+            rx_counts = session\
+                .execute("""SELECT `co_prescribed_drug`, `count` 
+                    FROM `co_rx` 
+                    WHERE `pert_id`='%s' 
+                    ORDER BY count DESC
+                    LIMIT %s
+                    """ % (self.pert_id, limit))\
+                .fetchall()
+
+            if len(rx_counts) == 0:
+                return None
+            else:
+                drugs = [ item[0] for item in rx_counts ]
+                counts = [ item[1] for item in rx_counts ]
+                results = {'categories': drugs, 'counts': counts, 'name': 'co_prescribed_drug'}
+                return json.dumps(results)
+
+    def get_dx_counts(self, limit=20):
+        with session_scope() as session:
+            dx_counts = session\
+                .execute("""SELECT `diagnosis`, `count` 
+                    FROM `co_dx` 
+                    WHERE `pert_id`='%s' 
+                    ORDER BY count DESC
+                    LIMIT %s
+                    """ % (self.pert_id, limit))\
+                .fetchall()
+
+            if len(dx_counts) == 0:
+                return None
+            else:
+                diagnoses = [ item[0] for item in dx_counts ]
+                counts = [ item[1] for item in dx_counts ]
+                results = {'categories': diagnoses, 'counts': counts, 'name': 'diagnoses'}
+                return json.dumps(results)
+

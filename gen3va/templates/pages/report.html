@@ -20,6 +20,17 @@
                 if report.pca_plot
                 else 'undefined'
             }},
+            barPlotDx: {{
+                drug.get_dx_counts()|safe
+                if drug.get_dx_counts()
+                else 'undefined'                
+            }},
+            barPlotRx: {{
+                drug.get_rx_counts()|safe
+                if drug.get_rx_counts()
+                else 'undefined'                
+            }},
+
             genesHeatMap: {{
                 report.genes_heat_map.to_json()|safe
                 if report.genes_heat_map
@@ -33,6 +44,7 @@
             enrichrHeatMaps: {{
                 report.enrichr_heat_maps|c_to_json|safe
             }}
+
         });
 
         // To load corresponding content into modal only when <a> is clicked.
@@ -47,7 +59,6 @@
     </script>
 
     <div class='page' id='report-page'>
-
         <div class='ribbon'>
             <div class='container'>
                 <div class='report-metadata'>
@@ -86,6 +97,30 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <!-- Diagnosis count -->
+            <div class='section'>
+                <h2>Diagnoses</h2>
+                <div class='description'>
+                    <p>
+                        Top diagnoses associated with {{ drug.pert_iname }}.
+                    </p>
+                </div>
+                <div id='dx-plot'></div>
+            </div>
+
+            <!-- Co-prescribed drugs count -->
+            <div class='section'>
+                <h2>Co-prescribed drugs</h2>
+                <div class='description'>
+                    <p>
+                        Top co-prescribed drugs of {{ drug.pert_iname }}.
+                    </p>
+                </div>
+                <div id='rx-plot'></div>
             </div>
         </div>
 
