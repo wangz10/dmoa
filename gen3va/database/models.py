@@ -100,41 +100,67 @@ class Drug(db.Model):
             url = 'http://maayanlab.net/SEP-L1000/img/cpd-images/%s.png' % self.pert_id
         return url
 
-    def get_rx_counts(self, limit=20):
+    def get_rx_counts(self, nrows=20):
         with session_scope() as session:
-            rx_counts = session\
-                .execute("""SELECT `co_prescribed_drug`, `count` 
-                    FROM `co_rx` 
-                    WHERE `pert_id`='%s' 
-                    ORDER BY count DESC
-                    LIMIT %s
-                    """ % (self.pert_id, limit))\
-                .fetchall()
+            query_results = session\
+                .execute("""SELECT co_rx.count AS z, 
+                    co_rx.normed_count AS x,
+                    rx_counts.count AS y, rx_counts.ingredient AS name
+                    FROM co_rx
+                    LEFT JOIN rx_counts ON rx_counts.`id`=co_rx.`co_prescribed_drug_id`
+                    WHERE pert_id=:pert_id
+                    ORDER BY x DESC
+                    LIMIT :nrows;
+                    """, params={'pert_id': self.pert_id, 'nrows':nrows})
 
-            if len(rx_counts) == 0:
+            if query_results.rowcount == 0:
                 return None
             else:
-                drugs = [ item[0] for item in rx_counts ]
-                counts = [ item[1] for item in rx_counts ]
-                results = {'categories': drugs, 'counts': counts, 'name': 'co_prescribed_drug'}
+                field_names = query_results.keys()
+                rx_counts = query_results.fetchall()
+                rx_counts = [dict(zip(field_names, row)) for row in rx_counts]
+                results = {'data': rx_counts, 'name': 'co_prescribed_drug'}
                 return json.dumps(results)
 
-    def get_dx_counts(self, limit=20):
+    def get_dx_counts(self, nrows=20):
         with session_scope() as session:
-            dx_counts = session\
-                .execute("""SELECT `diagnosis`, `count` 
-                    FROM `co_dx` 
-                    WHERE `pert_id`='%s' 
-                    ORDER BY count DESC
-                    LIMIT %s
-                    """ % (self.pert_id, limit))\
-                .fetchall()
+            query_results = session\
+                .execute("""SELECT co_dx.count AS z, 
+                    co_dx.normed_count AS x, 
+                    dx_counts.count AS y, dx_counts.ICD9, 
+                    dx_counts.diagnosis AS name
+                    FROM co_dx
+                    LEFT JOIN dx_counts ON dx_counts.`id`=co_dx.`diagnosis_id`
+                    WHERE pert_id=:pert_id
+                    ORDER BY x DESC
+                    LIMIT :nrows
+                    """, params={'pert_id': self.pert_id, 'nrows':nrows})
 
-            if len(dx_counts) == 0:
+            if query_results.rowcount == 0:
                 return None
             else:
-                diagnoses = [ item[0] for item in dx_counts ]
-                counts = [ item[1] for item in dx_counts ]
-                results = {'categories': diagnoses, 'counts': counts, 'name': 'diagnoses'}
+                field_names = query_results.keys()
+                dx_counts = query_results.fetchall()
+                dx_counts = [dict(zip(field_names, row)) for row in dx_counts]
+
+                results = {'data': dx_counts, 'name': 'diagnoses'}
+                return json.dumps(results)
+
+    def get_rx_age_kde(self):
+        '''Get the KDE smoothened age distribution for the prescription of this drug.
+        '''
+        with session_scope() as session:
+            query_results = session\
+                .execute("""SELECT age_years, density 
+                    FROM rx_age_kde
+                    WHERE pert_id=:pert_id
+                    """, params={'pert_id': self.pert_id})
+            if query_results.rowcount == 0:
+                return None
+            else:
+                results = query_results.fetchall()
+                age_years = [item[0] for item in results]
+                density = [item[1] for item in results]
+                results = {'density': density, 'age_years':age_years, 'name': self.pert_iname}
                 return json.dumps(results)
 

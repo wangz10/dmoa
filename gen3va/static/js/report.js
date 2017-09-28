@@ -9,43 +9,21 @@ function createAndManageVisualizations(config) {
         resizeClustergramsOnWindowResize();
         try {
             elem = '#dx-plot';
-            plotBar(config.barPlotDx, 'dx-plot');
+            plotBubble(config.barPlotDx, 'dx-plot');
         } catch (e) {
             $(elem).hide();
             console.log(e);
         }
         try {
             elem = '#rx-plot';
-            plotBar(config.barPlotRx, 'rx-plot');
-        } catch (e) {
-            $(elem).hide();
-            console.log(e);
-        }
-
-        plotPCA(config.pcaPlot);
-        try {
-            elem = '#genes-heat-map';
-            createClustergram(
-                elem,
-                config.genesHeatMap
-            );
+            plotBubble(config.barPlotRx, 'rx-plot');
         } catch (e) {
             $(elem).hide();
             console.log(e);
         }
         try {
-            elem = '#l1000cds2-heat-map';
-            createClustergram(
-                elem,
-                config.l1000cds2HeatMap
-            );
-        } catch (e) {
-            $(elem).hide();
-            console.log(e);
-        }
-        try {
-            elem = '#enrichr-heat-maps';
-            createAndWatchEnrichrHeatMaps(elem, config.enrichrHeatMaps);
+            elem = '#kde-plot';
+            plotKDE(config.kdeObj, 'kde-plot')
         } catch (e) {
             $(elem).hide();
             console.log(e);
@@ -498,6 +476,134 @@ function createAndManageVisualizations(config) {
                 }
             }
         })
+    }
+
+    function plotBubble(bubbleObj, renderTo){
+        var chart;
+        var tooltipFormatter = function() { 
+            var x = Highcharts.numberFormat(this.point.x, 4);
+            return '<table>' +
+                    '<tr><th colspan="2"><h3>'+this.point.name+'</h3></th></tr>' +
+                    '<tr><th>Co-occurence rate:</th><td>'+x+'</td></tr>' +
+                    '<tr><th>Total count:</th><td>'+this.point.y+'</td></tr>' +
+                    '<tr><th>Co-occurence count:</th><td>'+this.point.z+'</td></tr>' + 
+                    '</table>'
+        };
+
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: renderTo,
+                type: 'bubble',
+                zoomType: 'xy'
+            },
+            legend: {
+                enabled: false,
+            },
+            title: {
+                text: 'Bubble chart'
+            },
+            xAxis: {
+                gridLineWidth: 1,
+                title: {
+                    text: 'Co-occurence rate'
+                },
+                labels: {
+                    enabled: true
+                },
+            },
+            yAxis: {
+                title: {
+                    text: 'Total count'
+                },
+                labels: {
+                    enabled: true
+                },
+            },
+            tooltip: {
+                useHTML: true,
+                formatter: tooltipFormatter,
+            },            
+            plotOptions: {
+                series: {
+                    dataLabels: {
+                        enabled: true,
+                        format: '{point.name}'
+                    },
+                    colorByPoint: true
+                }
+            },
+            series: [{
+                data: bubbleObj['data']
+            }]
+
+        });
+    }
+
+    function plotKDE(kdeObj, renderTo){
+        var chart;
+        var tooltipFormatter = function() { 
+            var y = Highcharts.numberFormat(this.point.y, 4);
+            return '<table>' +
+                    '<tr><th colspan="2"><h3>'+this.point.name+'</h3></th></tr>' +
+                    '<tr><th>Co-occurence rate:</th><td>'+this.point.x+'</td></tr>' +
+                    '<tr><th>Total count:</th><td>'+y+'</td></tr>' +
+                    '<tr><th>Co-occurence count:</th><td>'+this.point.z+'</td></tr>' + 
+                    '</table>'
+        };
+        
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: renderTo,
+                type: 'area'
+            },
+            title: {
+                text: 'Age distribution'
+            },
+            xAxis: {
+                allowDecimals: false,
+                title: {
+                        text: 'Age (years)'
+                },
+                labels: {
+                    formatter: function () {
+                        return this.value;
+                    }
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Probability'
+                },
+                labels: {
+                    enabled: true
+                }
+            },
+            tooltip: {
+                    headerFormat: '',
+                pointFormat: 'Probability: {point.y:,.3f}<br/>Age: {point.x:,.0f}'
+            },
+            plotOptions: {
+                area: {
+                    pointStart: kdeObj['age_years'][0],
+                    pointInterval: kdeObj['age_years'][1] - kdeObj['age_years'][0],
+                    marker: {
+                        enabled: false,
+                        symbol: 'circle',
+                        radius: 2,
+                        states: {
+                            hover: {
+                                enabled: true
+                            }
+                        }
+                    }
+                }
+            }, 
+            series: [{
+                name: kdeObj['name'],
+                data: kdeObj['density']
+            }]
+        })        
+
     }
 
     /* Strip the preceding number, spaces, and hyphens from the names.
