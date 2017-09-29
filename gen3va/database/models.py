@@ -108,10 +108,10 @@ class Drug(db.Model):
                     rx_counts.count AS y, rx_counts.ingredient AS name
                     FROM co_rx
                     LEFT JOIN rx_counts ON rx_counts.`id`=co_rx.`co_prescribed_drug_id`
-                    WHERE pert_id=:pert_id
+                    WHERE ingredient_id=:ingredient_id
                     ORDER BY x DESC
                     LIMIT :nrows;
-                    """, params={'pert_id': self.pert_id, 'nrows':nrows})
+                    """, params={'ingredient_id': self.ingredient_id, 'nrows':nrows})
 
             if query_results.rowcount == 0:
                 return None
@@ -131,10 +131,10 @@ class Drug(db.Model):
                     dx_counts.diagnosis AS name
                     FROM co_dx
                     LEFT JOIN dx_counts ON dx_counts.`id`=co_dx.`diagnosis_id`
-                    WHERE pert_id=:pert_id
+                    WHERE ingredient_id=:ingredient_id
                     ORDER BY x DESC
                     LIMIT :nrows
-                    """, params={'pert_id': self.pert_id, 'nrows':nrows})
+                    """, params={'ingredient_id': self.ingredient_id, 'nrows':nrows})
 
             if query_results.rowcount == 0:
                 return None
@@ -142,9 +142,10 @@ class Drug(db.Model):
                 field_names = query_results.keys()
                 dx_counts = query_results.fetchall()
                 dx_counts = [dict(zip(field_names, row)) for row in dx_counts]
-
                 results = {'data': dx_counts, 'name': 'diagnoses'}
                 return json.dumps(results)
+
+
 
     def get_rx_age_kde(self):
         '''Get the KDE smoothened age distribution for the prescription of this drug.
@@ -153,8 +154,8 @@ class Drug(db.Model):
             query_results = session\
                 .execute("""SELECT age_years, density 
                     FROM rx_age_kde
-                    WHERE pert_id=:pert_id
-                    """, params={'pert_id': self.pert_id})
+                    WHERE ingredient_id=:ingredient_id
+                    """, params={'ingredient_id': self.ingredient_id})
             if query_results.rowcount == 0:
                 return None
             else:
