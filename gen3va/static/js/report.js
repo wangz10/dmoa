@@ -9,14 +9,14 @@ function createAndManageVisualizations(config) {
         resizeClustergramsOnWindowResize();
         try {
             elem = '#dx-plot';
-            plotBubble(config.barPlotDx, 'dx-plot');
+            plotBar(config.barPlotDx, 'dx-plot');
         } catch (e) {
             $(elem).hide();
             console.log(e);
         }
         try {
             elem = '#rx-plot';
-            plotBubble(config.barPlotRx, 'rx-plot');
+            plotBar(config.barPlotRx, 'rx-plot');
         } catch (e) {
             $(elem).hide();
             console.log(e);
@@ -425,7 +425,45 @@ function createAndManageVisualizations(config) {
     }
 
     function plotBar(barplotObj, renderTo) {
+        var colors10 = ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c', '#8085e9', 
+        '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1'];
+
         var chart;
+        var sortDataAndAddColor = function(data, attr){
+            // array of objects sorted by attr, then add colors 
+            data = _.sortBy(data, attr).reverse();
+            var data_ = [];
+            for (var i = 0; i < data.length; i++) {
+                var obj = data[i]
+                obj['color'] = colors10[i % 10];
+                obj['y']  = obj[attr]
+                data_.push(obj)
+            };
+            return data_;
+        };
+
+        var processAndSortData = function(data, attr){
+            function fix_key(key){
+                if (key.length === 1){
+                    key = key + '_'
+                }
+                return key
+            }
+            var data_ = []
+            for (var i = 0; i < data.length; i++) {
+                var obj = data[i]
+                var obj_ = _.object(
+                    _.map(_.keys(obj), fix_key),
+                    _.values(obj)
+                    );
+                data_.push(obj_)
+            };
+            data_ = sortDataAndAddColor(data_, attr);
+            return data_;
+        };
+
+        var data = processAndSortData(barplotObj.data, 'x_');
+
         chart = new Highcharts.Chart({
             chart: {
                 renderTo: renderTo,
@@ -433,49 +471,55 @@ function createAndManageVisualizations(config) {
             },
             legend: {
                 enabled: true,
-                // floating: true,
-                // layout: 'vertical',
-                // align: 'left',
-                // verticalAlign: 'top'
             },
             title: {
                 text: 'Bar plot'
             },
             xAxis: {
-                categories: barplotObj.categories,
+                type: 'category',
                 labels: {
                     enabled: true
                 },
             },
             yAxis: {
-                allowDecimals: false,
+                allowDecimals: true,
                 title: {
-                    text: 'Count'
-                },
-                min: 0,
-                max: barplotObj.counts[0]
+                    text: 'Co-occurence rate'
+                }
             },
+            series: [],
+        });
+        chart.addSeries({data: data})
+        
+        // button to switch data
+        var btnSelector = '#'+ renderTo + '-btn';
+        $(btnSelector).attr('currentAttr', 'x_');
+        $(btnSelector).text('Sort by co-occurence count');
 
-            series: [ {'name': barplotObj.name, 'data': barplotObj.counts} ],
-            plotOptions: {
-                series: {
-                    colorByPoint: true
-                }
-            },            
-            tooltip: {
-                useHTML: true,
-                backgroundColor: '#7FB800', // green
-                borderColor: '#7FB800',
-                borderRadius: 0,
-                shadow: false,
-                style: {
-                    color: 'white',
-                    fontFamily: 'Roboto',
-                    fontWeight: 'bold',
-                    padding: 6
-                }
+        $(btnSelector).click(function(){
+            var currentAttr = $(this).attr('currentAttr');
+
+            if (currentAttr == 'y_'){ // current is count, switch to rate
+                $(btnSelector).text('Sort by co-occurence count');
+                var data1 = processAndSortData(data, 'x_');
+                
+                chart.series[0].remove(false)
+                chart.addSeries({data: data1}, false)
+                chart.yAxis[0].setTitle({text:'Co-occurence rate'}, false);
+                chart.yAxis[0].setExtremes(0, data1[0].y);
+                $(this).attr('currentAttr', 'x_')
+            } else{ // current is rate, switch to count
+                $(btnSelector).text('Sort by co-occurence rate');
+                var data2 = sortDataAndAddColor(data, 'y_');
+
+                chart.series[0].remove(false)
+                chart.addSeries({data: data2}, false)
+                chart.yAxis[0].setTitle({text:'Co-occurence count'}, false);
+                chart.yAxis[0].setExtremes(0, data2[0].y);
+                $(this).attr('currentAttr', 'y_')
             }
         })
+        
     }
 
     function plotBubble(bubbleObj, renderTo){
