@@ -87,7 +87,9 @@ class Drug(db.Model):
 
         if not isnull(self.LSM_id):
             d['LINCS Data Portal'] = (self.LSM_id, 
-                ' http://lincsportal.ccs.miami.edu/SmallMolecules/#/view/%s' % self.LSM_id)
+                'http://lincsportal.ccs.miami.edu/SmallMolecules/#/view/%s' % self.LSM_id)
+            d['iLINCS'] = (self.LSM_id, 
+                'http://www.ilincs.org/ilincs/perturbagen/compound/%s' % self.LSM_id)
 
         d['SEP-L1000'] = (self.pert_id, 
             'http://maayanlab.net/SEP-L1000/#drug/%s' % self.pert_id)
