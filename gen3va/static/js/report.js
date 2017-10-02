@@ -15,12 +15,27 @@ function createAndManageVisualizations(config) {
             console.log(e);
         }
         try {
+            elem = '#dx-bubble-plot';
+            plotBubble(config.barPlotDx, 'dx-bubble-plot');
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
+        try {
             elem = '#rx-plot';
             plotBar(config.barPlotRx, 'rx-plot');
         } catch (e) {
             $(elem).hide();
             console.log(e);
         }
+        try {
+            elem = '#rx-bubble-plot';
+            plotBubble(config.barPlotRx, 'rx-bubble-plot');
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
+
         try {
             elem = '#kde-plot';
             plotKDE(config.kdeObj, 'kde-plot')
@@ -464,6 +479,23 @@ function createAndManageVisualizations(config) {
 
         var data = processAndSortData(barplotObj.data, 'x_');
 
+
+        var tooltipFormatter = function() { 
+            var value = this.point.y;
+            if (value % 1 === 0){
+                return '<table>' +
+                        '<tr><th colspan="2"><h3>'+this.point.name+'</h3></th></tr>' +
+                        '<tr><th>Co-occurence count:</th><td>'+value+'</td></tr>' +
+                        '</table>'
+            }else{
+                value = Highcharts.numberFormat(value, 3);
+                return '<table>' +
+                        '<tr><th colspan="2"><h3>'+this.point.name+'</h3></th></tr>' +
+                        '<tr><th>Co-occurence rate:</th><td>'+value+'</td></tr>' +
+                        '</table>'                
+            }
+        };
+
         chart = new Highcharts.Chart({
             chart: {
                 renderTo: renderTo,
@@ -486,6 +518,10 @@ function createAndManageVisualizations(config) {
                 title: {
                     text: 'Co-occurence rate'
                 }
+            },
+            tooltip: {
+                useHTML: true,
+                formatter: tooltipFormatter,
             },
             series: [],
         });

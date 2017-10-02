@@ -99,7 +99,22 @@
                         Top diagnoses associated with {{ drug.pert_iname }}.
                     </p>
                 </div>
-                <div id='dx-plot'></div>
+                <!-- Togglable tabs for co-dx -->
+                <div>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#dx-bar" aria-controls="dx-bar" role="tab" data-toggle="tab">Bar plot</a></li>
+                        <li role="presentation"><a href="#dx-bubble" aria-controls="dx-bubble" role="tab" data-toggle="tab">Bubble plot</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="dx-bar">
+                            <div id='dx-plot'></div>
+                            <button id="dx-plot-btn"></button>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="dx-bubble">
+                            <div id='dx-bubble-plot'></div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Co-prescribed drugs count -->
@@ -110,7 +125,22 @@
                         Top co-prescribed drugs of {{ drug.pert_iname }}.
                     </p>
                 </div>
-                <div id='rx-plot'></div>
+                <!-- Togglable tabs for co-rx -->
+                <div>
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active"><a href="#rx-bar" aria-controls="rx-bar" role="tab" data-toggle="tab">Bar plot</a></li>
+                        <li role="presentation"><a href="#rx-bubble" aria-controls="rx-bubble" role="tab" data-toggle="tab">Bubble plot</a></li>
+                    </ul>
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="rx-bar">
+                            <div id='rx-plot'></div>
+                            <button id="rx-plot-btn"></button>
+                        </div>
+                        <div role="tabpanel" class="tab-pane" id="rx-bubble">
+                            <div id='rx-bubble-plot'></div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- KDE plot for prescription over age -->
