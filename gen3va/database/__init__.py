@@ -10,4 +10,5 @@ from database import \
     update_object,\
     delete_object,\
     get_statistics
+from mongo import mongo
 from models import Drug

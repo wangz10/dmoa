@@ -7,6 +7,7 @@ from flask.ext.login import LoginManager, user_logged_out
 
 from gen3va.config import Config
 from substrate import User, db as substrate_db
+from gen3va.database import mongo
 
 app = Flask(__name__,
             static_url_path=Config.BASE_URL + '/static',
@@ -16,8 +17,10 @@ app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_POOL_RECYCLE'] = Config.SQLALCHEMY_POOL_RECYCLE
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 6
+app.config['MONGO_DBNAME'] = Config.MONGO_DBNAME
 
 substrate_db.init_app(app)
+mongo.init_app(app)
 cors = CORS(app)
 
 
@@ -45,7 +48,8 @@ from gen3va.utils.jinjafilters import jinjafilters
 app.register_blueprint(endpoints.error_page)
 app.register_blueprint(endpoints.menu_pages)
 app.register_blueprint(endpoints.report_pages)
-app.register_blueprint(endpoints.tag_pages)
+app.register_blueprint(endpoints.signature_pages)
+# app.register_blueprint(endpoints.tag_pages)
 # app.register_blueprint(endpoints.download_api)
 # app.register_blueprint(endpoints.upload_api)
 app.register_blueprint(endpoints.signature_external_redirect_api)
@@ -116,5 +120,6 @@ app.config.update({
     'RESULTS_URL': Config.RESULTS_URL,
     'APPROVED_REPORT_URL': Config.APPROVED_REPORT_URL,
     'CUSTOM_REPORT_URL': Config.CUSTOM_REPORT_URL,
-    'TAG_URL': Config.TAG_URL
+    'TAG_URL': Config.TAG_URL,
+    'SIG_URL': Config.SIG_URL,
 })

@@ -1,6 +1,7 @@
 # DB connection configs. Do *NOT* version control these.
 *.conf
 *.ini
+config.json
 migrations/config.ini
 
 # IntelliJ

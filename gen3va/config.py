@@ -2,14 +2,12 @@
 """
 
 import os
-
+import json
 
 class Config(object):
 
-    with open('gen3va/dev2.conf') as f:
-        lines = [x for x in f.read().split('\n')]
-
-    DEBUG = lines[1] == 'True'
+    secrete_configs = json.load(open('gen3va/config.json', 'rb'))
+    DEBUG = secrete_configs['DEBUG']
 
     root = os.path.dirname(os.getcwd())
     if root.endswith('/'):
@@ -23,6 +21,7 @@ class Config(object):
     BASE_CLUSTER_URL = BASE_URL + '/cluster'
 
     REPORT_URL = BASE_URL + '/report'
+    SIG_URL = BASE_URL + '/sig'
     APPROVED_REPORT_URL = REPORT_URL + '/approved'
     CUSTOM_REPORT_URL = REPORT_URL + '/custom'
     TAG_URL = BASE_URL + '/tag'
@@ -30,7 +29,9 @@ class Config(object):
     DOWNLOAD_URL = BASE_URL + '/download'
     UPLOAD_URL = BASE_API_URL + '/upload'
 
-    SQLALCHEMY_DATABASE_URI = lines[0]
+    SQLALCHEMY_DATABASE_URI = secrete_configs['SQLALCHEMY_DATABASE_URI']
+    MONGO_URI = secrete_configs['MONGO_URI']
+    MONGO_DBNAME = secrete_configs['MONGO_DBNAME']
 
     # This value should be less than MySQL's wait_timeout variable. To check
     # the value of the variable, type the following query into phpMyAdmin:
