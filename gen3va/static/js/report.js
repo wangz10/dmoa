@@ -37,7 +37,7 @@ function createAndManageVisualizations(config) {
 
     $(function() {
         var elem;
-        setupDataTables();
+        // setupDataTables();
         resizeClustergramsOnWindowResize();
         try {
             elem = '#dx-plot';

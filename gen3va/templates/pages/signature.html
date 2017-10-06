@@ -11,6 +11,30 @@
     <script src='static/lib/d3/d3.js'></script>
     <script src='static/lib/underscore/underscore.js'></script>
 
+    <script src='static/js/report.js'></script>
+    <script>
+        console.log({{ drug.get_dx_counts(50)|safe }})
+        createAndManageVisualizations({
+            barPlotDx: {{
+                drug.get_dx_counts(50)|safe
+                if drug.get_dx_counts()
+                else 'undefined'                
+            }},
+            barPlotRx: {{
+                drug.get_rx_counts(50)|safe
+                if drug.get_rx_counts()
+                else 'undefined'                
+            }},
+            kdeObj: {{
+                drug.get_rx_age_kde()|safe
+                if drug.get_rx_age_kde()
+                else 'undefined'
+            }}
+
+        });
+
+    </script>
+
 
 <div class='page' id='signature-page'>
   <div class="container">
@@ -24,6 +48,8 @@
         <dd>{{ sig['pert_dose']|c_filter_empty }}</dd>
         <dt>p-value</dt>
         <dd>{{ sig['pvalue']|c_filter_empty }}</dd>
+        <dt>Drug name</dt>
+        <dd>{{ drug.pert_iname }}</dd>
     </dl>
     <div id='gene-signatures-table' class='section'>
       <div class='table-responsive'>
@@ -87,68 +113,65 @@
   {% include 'partial/drug-meta.html' %}
   <div class="container">
     {% include 'partial/drug-dx-counts.html' %}
-    {% include 'partial/drug-rx-counts.html' %}
-    {% include 'partial/drug-age-kde.html' %}
+    <!-- {% include 'partial/drug-rx-counts.html' %} -->
+    <!-- {% include 'partial/drug-age-kde.html' %} -->
   </div>
 </div>    
 
 <script type="text/javascript">
-var gene_lists = {
-    up_genes: $("#up_genes").data().name,
-    down_genes: $("#down_genes").data().name,
-    combined_genes: $("#combined_genes").data().name,
-};
+// var gene_lists = {
+//     up_genes: $("#up_genes").data().name,
+//     down_genes: $("#down_genes").data().name,
+//     combined_genes: $("#combined_genes").data().name,
+// };
 
-var extraction_id = $("#extraction_id").data().name;
+// var extraction_id = $("#extraction_id").data().name;
 
-$(".enrichr-btn").on('click', function(e){
-    var key = $(this).attr("id");
-    var genes = gene_lists[key];
-    var description = extraction_id + '-' + key;
-    enrich({list: genes, description: description, popup: true})
-});
+// $(".enrichr-btn").on('click', function(e){
+//     var key = $(this).attr("id");
+//     var genes = gene_lists[key];
+//     var description = extraction_id + '-' + key;
+//     enrich({list: genes, description: description, popup: true})
+// });
 
-$('[data-toggle="tooltip"]').tooltip();
+// $('[data-toggle="tooltip"]').tooltip();
 
-function enrich(options) { // http://amp.pharm.mssm.edu/Enrichr/#help
-    var defaultOptions = {
-    description: "",
-    popup: false
-  };
+// function enrich(options) { // http://amp.pharm.mssm.edu/Enrichr/#help
+//     var defaultOptions = {
+//     description: "",
+//     popup: false
+//   };
 
-  if (typeof options.description == 'undefined')
-    options.description = defaultOptions.description;
-  if (typeof options.popup == 'undefined')
-    options.popup = defaultOptions.popup;
-  if (typeof options.list == 'undefined')
-    alert('No genes defined.');
+//   if (typeof options.description == 'undefined')
+//     options.description = defaultOptions.description;
+//   if (typeof options.popup == 'undefined')
+//     options.popup = defaultOptions.popup;
+//   if (typeof options.list == 'undefined')
+//     alert('No genes defined.');
 
-  var form = document.createElement('form');
-  form.setAttribute('method', 'post');
-  form.setAttribute('action', 'http://amp.pharm.mssm.edu/Enrichr/enrich');
-  if (options.popup)
-    form.setAttribute('target', '_blank');
-  form.setAttribute('enctype', 'multipart/form-data');
+//   var form = document.createElement('form');
+//   form.setAttribute('method', 'post');
+//   form.setAttribute('action', 'http://amp.pharm.mssm.edu/Enrichr/enrich');
+//   if (options.popup)
+//     form.setAttribute('target', '_blank');
+//   form.setAttribute('enctype', 'multipart/form-data');
 
-  var listField = document.createElement('input');
-  listField.setAttribute('type', 'hidden');
-  listField.setAttribute('name', 'list');
-  listField.setAttribute('value', options.list);
-  form.appendChild(listField);
+//   var listField = document.createElement('input');
+//   listField.setAttribute('type', 'hidden');
+//   listField.setAttribute('name', 'list');
+//   listField.setAttribute('value', options.list);
+//   form.appendChild(listField);
 
-  var descField = document.createElement('input');
-  descField.setAttribute('type', 'hidden');
-  descField.setAttribute('name', 'description');
-  descField.setAttribute('value', options.description);
-  form.appendChild(descField);
+//   var descField = document.createElement('input');
+//   descField.setAttribute('type', 'hidden');
+//   descField.setAttribute('name', 'description');
+//   descField.setAttribute('value', options.description);
+//   form.appendChild(descField);
 
-  document.body.appendChild(form);
-  form.submit();
-  document.body.removeChild(form);
-}
+//   document.body.appendChild(form);
+//   form.submit();
+//   document.body.removeChild(form);
+// }
 </script>
-
-
-
 
 {% endblock %}
