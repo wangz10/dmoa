@@ -1,0 +1,25 @@
+<!-- Co-prescribed drugs count -->
+<div class='section'>
+    <h2>Co-prescribed drugs</h2>
+    <div class='description'>
+        <p>
+            Top co-prescribed drugs of {{ drug.pert_iname }}.
+        </p>
+    </div>
+    <!-- Togglable tabs for co-rx -->
+    <div>
+        <ul class="nav nav-tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#rx-bar" aria-controls="rx-bar" role="tab" data-toggle="tab">Bar plot</a></li>
+            <li role="presentation"><a href="#rx-bubble" aria-controls="rx-bubble" role="tab" data-toggle="tab">Bubble plot</a></li>
+        </ul>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="rx-bar">
+                <div id='rx-plot'></div>
+                <button id="rx-plot-btn"></button>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="rx-bubble">
+                <div id='rx-bubble-plot'></div>
+            </div>
+        </div>
+    </div>
+</div>

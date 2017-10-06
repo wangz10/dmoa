@@ -45,125 +45,18 @@
     </script>
 
     <div class='page' id='report-page'>
-        <div class='ribbon'>
-            <div class='container'>
-                <div class='report-metadata'>
-                    <h1>
-                    {% if report.is_approved %}
-                        <strong>{{ drug.pert_iname|upper }} ({{ tag.name }})</strong> <span>report</span>
-                    {% else %}
-                        <strong>{{ report.name }}</strong><span>, custom report for {{ tag.name|upper }}</span>
-                    {% endif %}
-                    </h1>
-                    {% if report.category %}
-                        <p>Categorized using metadata field <strong>{{ report.category }}</strong></p>
-                    {% endif %}
-                    <div class="row">
-                        <div class="col-md-8">
-                            <h2>Overview</h2>
-                            <dl class="dl-horizontal">
-                                {% for key, value in drug.to_dict().items() %}
-                                    <dt>{{ key }}</dt>
-                                    <dd>{{ value }}</dd>
-                                {% endfor %}
-                            </dl>
-
-                            <h2>External links</h2>
-                            <dl class="dl-horizontal">
-                                {% for key, (display_name, url) in drug.get_external_links().items() %}
-                                    <dt>{{ key }}</dt>
-                                    <dd><a href="{{ url }}" target="_blank">{{ display_name }}</a></dd>
-                                {% endfor %}
-                            </dl>
-                        </div>
-
-                        <div class="col-md-4">
-                            <h2>Chemical structure</h2>
-                            <img src="{{drug.get_structure_url()}}">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        {% include 'partial/drug-meta.html' %}
 
         <div class="container">
-            <!-- Diagnosis count -->
-            <div class='section'>
-                <h2>Diagnoses</h2>
-                <div class='description'>
-                    <p>
-                        Top diagnoses associated with {{ drug.pert_iname }}.
-                    </p>
-                </div>
-                <!-- Togglable tabs for co-dx -->
-                <div>
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#dx-bar" aria-controls="dx-bar" role="tab" data-toggle="tab">Bar plot</a></li>
-                        <li role="presentation"><a href="#dx-bubble" aria-controls="dx-bubble" role="tab" data-toggle="tab">Bubble plot</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="dx-bar">
-                            <div id='dx-plot'></div>
-                            <button id="dx-plot-btn"></button>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="dx-bubble">
-                            <div id='dx-bubble-plot'></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Co-prescribed drugs count -->
-            <div class='section'>
-                <h2>Co-prescribed drugs</h2>
-                <div class='description'>
-                    <p>
-                        Top co-prescribed drugs of {{ drug.pert_iname }}.
-                    </p>
-                </div>
-                <!-- Togglable tabs for co-rx -->
-                <div>
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="active"><a href="#rx-bar" aria-controls="rx-bar" role="tab" data-toggle="tab">Bar plot</a></li>
-                        <li role="presentation"><a href="#rx-bubble" aria-controls="rx-bubble" role="tab" data-toggle="tab">Bubble plot</a></li>
-                    </ul>
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="rx-bar">
-                            <div id='rx-plot'></div>
-                            <button id="rx-plot-btn"></button>
-                        </div>
-                        <div role="tabpanel" class="tab-pane" id="rx-bubble">
-                            <div id='rx-bubble-plot'></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- KDE plot for prescription over age -->
-            <div class='section'>
-                <h2>Age distribution</h2>
-                <div class='description'>
-                    <p>
-                        Probability distribution for the prescription of {{ drug.pert_iname }} over age.
-                    </p>
-                </div>
-                <div id='kde-plot'></div>
-            </div>
-
+            {% include 'partial/drug-dx-counts.html' %}
+            {% include 'partial/drug-rx-counts.html' %}
+            {% include 'partial/drug-age-kde.html' %}
         </div>
 
         <div class='container'>
             <!-- Gene signatures -->
             <div id='gene-signatures-table' class='section'>
                 <h2>Gene signatures</h2>
-                {% if report.is_approved %}
-                    {% set more_signatures_url = config.TAG_URL ~ '/' ~ tag.name %}
-                {% else %}
-                    {% set more_signatures_url = config.TAG_URL ~ '/' ~ report.id %}
-                {% endif %}
-                <a href='{{ more_signatures_url }}' class='btn btn-info' id='more-signatures-btn'>
-                    Signatures ({{ report.gene_signatures|length }}) and Custom Report Builder
-                </a>
                 <div class='table-responsive'>
                     <table class='table data-table responsive'>
                         <thead>
