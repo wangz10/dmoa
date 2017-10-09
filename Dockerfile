@@ -35,7 +35,8 @@ RUN pip install \
     six==1.9.0 \
     sklearn==0.0 \
     wsgiref==0.1.2 \
-    git+git://github.com/MaayanLab/substrate.git@zichen
+    git+git://github.com/MaayanLab/substrate.git@zichen \
+    Flask-PyMongo==0.5.1
 
 RUN apt-get clean
 
