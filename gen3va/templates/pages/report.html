@@ -15,6 +15,7 @@
     <script src='static/js/report.js'></script>
     <script>
         createAndManageVisualizations({
+            hasDataTable: true,
             barPlotDx: {{
                 drug.get_dx_counts(50)|safe
                 if drug.get_dx_counts()

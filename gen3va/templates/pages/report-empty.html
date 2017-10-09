@@ -13,8 +13,8 @@
 
     <script src='static/js/report.js'></script>
     <script>
-        console.log({{ drug.get_dx_counts(50)|safe }})
         createAndManageVisualizations({
+            hasDataTable: false,
             barPlotDx: {{
                 drug.get_dx_counts(50)|safe
                 if drug.get_dx_counts()
