@@ -31,7 +31,6 @@ class Config(object):
 
     SQLALCHEMY_DATABASE_URI = secrete_configs['SQLALCHEMY_DATABASE_URI']
     MONGO_URI = secrete_configs['MONGO_URI']
-    MONGO_DBNAME = secrete_configs['MONGO_DBNAME']
 
     # This value should be less than MySQL's wait_timeout variable. To check
     # the value of the variable, type the following query into phpMyAdmin:

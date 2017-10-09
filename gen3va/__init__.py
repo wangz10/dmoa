@@ -13,11 +13,12 @@ app = Flask(__name__,
             static_url_path=Config.BASE_URL + '/static',
             static_folder='static')
 
+
 app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_POOL_RECYCLE'] = Config.SQLALCHEMY_POOL_RECYCLE
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 6
-app.config['MONGO_DBNAME'] = Config.MONGO_DBNAME
+app.config['MONGO_URI'] = Config.MONGO_URI
 
 substrate_db.init_app(app)
 mongo.init_app(app)

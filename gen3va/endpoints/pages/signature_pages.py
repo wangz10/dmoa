@@ -8,7 +8,7 @@ from flask.ext.login import login_required
 from gen3va.database import Drug
 from gen3va.config import Config
 from gen3va import database
-from gen3va.database import mongo
+from gen3va.database import mongo, Signature
 
 
 signature_pages = Blueprint('signature_pages',
@@ -20,10 +20,11 @@ def view_signature(sig_id):
     """Landing page for the drug-induced signature.
     """
     print sig_id
-    sig = mongo.db.sigs.find_one({'sig_id': sig_id}, {'_id':False})
-    print sig.keys()
+    # sig = mongo.db.sigs.find_one({'sig_id': sig_id}, {'_id':False})
+    sig = Signature(sig_id, mongo)
+    print sig.pvalue
 
-    drug = database.get(Drug, sig['pert_id'], 'pert_id')
+    drug = database.get(Drug, sig.pert_id, 'pert_id')
 
     return render_template('pages/signature.html',
                             sig=sig,

@@ -1,6 +1,6 @@
 {% extends 'wrapper.html' %}
 
-{% block title %}{{ sig['sig_id'] }}{% endblock %}
+{% block title %}{{ sig.sig_id }}{% endblock %}
 
 {% block body %}
 
@@ -41,13 +41,15 @@
     <!-- The content in .modal-content for gene signatures -->
     <dl class="dl-horizontal">
         <dt>Signature ID</dt>
-        <dd>{{ sig['sig_id']|c_filter_empty }}</dd>
+        <dd>{{ sig.sig_id|c_filter_empty }}</dd>
         <dt>Cell</dt>
-        <dd>{{ sig['cell_id']|c_filter_empty }}</dd>
+        <dd>{{ sig.cell_id|c_filter_empty }}</dd>
         <dt>Dose</dt>
-        <dd>{{ sig['pert_dose']|c_filter_empty }}</dd>
+        <dd>{{ sig.pert_dose|c_filter_empty }}μM</dd>
+        <dt>Time</dt>
+        <dd>{{ sig.pert_time|c_filter_empty }}H</dd>
         <dt>p-value</dt>
-        <dd>{{ sig['pvalue']|c_filter_empty }}</dd>
+        <dd>{{ sig.pvalue }}</dd>
         <dt>Drug name</dt>
         <dd>{{ drug.pert_iname }}</dd>
     </dl>
