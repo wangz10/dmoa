@@ -1,0 +1,53 @@
+{% extends 'wrapper.html' %}
+
+{% block body %}
+
+    <div id="body" class="container-full">
+      <canvas id="text-label"></canvas>
+    </div>
+    {% include 'partial/footer.html' %}
+
+    <script src="static/lib/jquery.min.js"></script>
+    <script src="static/lib/underscore-min.js"></script>
+    <script src="static/lib/backbone-min.js"></script>
+    <script src="static/lib/bootstrap.min.js"></script>
+    
+    <script src="static/lib/d3.v3.min.js"></script>
+    <script src="static/lib/d3-legend.min.js"></script>
+    <script src="static/lib/selectize.js"></script>
+    <script src="static/lib/datatables.js"></script>
+    <script src="static/lib/datatables.bootstrap.js"></script>
+
+    <script src="static/lib/three.min.js"></script>
+    <script src="static/lib/OrbitControls.js"></script>
+
+    <script src="static/lib/Detector.js"></script>
+    <script src="static/lib/stats.min.js"></script>
+    
+    <script src="static/js/textures.js"></script>
+    <script src="static/js/scatterPlot.js"></script>
+    <script src="static/js/scatterWidgets.js"></script>
+    <script>
+        var result_id = "{{ result_id }}";
+        var url = "{{ url }}";
+        var sdvConfig = {{ sdvConfig|safe }};
+    </script>
+    <script src="static/js/{{ script }}.js"></script>
+
+
+    {% if script == 'result' %}
+        <div class="modal fade" id="result-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Similarity search results</h4>
+              </div>
+              <div class="modal-body"></div>
+            </div>
+          </div>
+        </div>
+    {% endif %}
+
+
+{% endblock %}

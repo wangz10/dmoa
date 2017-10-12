@@ -1,7 +1,7 @@
 """Configures the application at server startup.
 """
 
-from flask import Flask, session as flask_session
+from flask import Flask, send_from_directory, session as flask_session
 from flask.ext.cors import CORS
 from flask.ext.login import LoginManager, user_logged_out
 
@@ -47,6 +47,7 @@ from gen3va.utils.jinjafilters import jinjafilters
 # app.register_blueprint(endpoints.admin_pages)
 # app.register_blueprint(endpoints.auth_pages)
 app.register_blueprint(endpoints.error_page)
+app.register_blueprint(endpoints.graph_pages)
 app.register_blueprint(endpoints.menu_pages)
 app.register_blueprint(endpoints.report_pages)
 app.register_blueprint(endpoints.signature_pages)
@@ -91,26 +92,11 @@ def build_all_reports():
         #         report_builder.rebuild(tag, category='cell', wait_till_done=True)
     return
 
-# User authentication
-# ----------------------------------------------------------------------------
-# login_manager = LoginManager()
-# login_manager.init_app(app)
-# login_manager.login_view = 'auth_pages.login'
-
-
-# @login_manager.user_loader
-# def load_user(user_id):
-#     """Utility method for loading User for Flask-Login.
-#     """
-#     user = substrate_db.session.query(User).get(user_id)
-#     app.config.user = user
-#     return user
-
-# @user_logged_out.connect_via(app)
-# def unset_current_user(sender, user):
-#     """When the user logs out, we need to unset this global variable.
-#     """
-#     app.config.user = None
+@app.route('/<path:filename>')
+def send_file(filename):
+    '''Serve static files.
+    '''
+    return send_from_directory(app.static_folder, filename)
 
 
 # Setup global variables that are available in Jinja2 templates

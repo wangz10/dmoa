@@ -7,8 +7,9 @@ import json
 from flask import abort, Blueprint, render_template, request, Response
 
 from substrate import BioCategory, Curator, Tag
-from gen3va.database import Drug
-from gen3va.database import database
+# from gen3va.database import Drug
+# from gen3va.database import database
+from gen3va.database import *
 from gen3va.config import Config
 
 
@@ -41,19 +42,38 @@ menu_pages = Blueprint('menu_pages',
 @menu_pages.before_app_first_request
 def get_globals():
     global drugs_meta
-    tags = database.get_all(Tag)
-    d_pertid_nsigs = {tag.name: len(tag.gene_signatures) for tag in tags}
-    d_pert_name = database.get_all_drug_meta()
-    drugs_meta = [None] * len(d_pert_name)
-    i = 0
-    for pert_id, name in d_pert_name.items():
-        nsigs = d_pertid_nsigs.get(pert_id, 0)
-        drugs_meta[i] = {'pert_id': pert_id, 'name': name, 'nsigs': nsigs}
-        i += 1
+    # tags = database.get_all(Tag)
+    # d_pertid_nsigs = {tag.name: len(tag.gene_signatures) for tag in tags}
+    # d_pert_name = database.get_all_drug_meta()
+    # drugs_meta = [None] * len(d_pert_name)
+    # i = 0
+    # for pert_id, name in d_pert_name.items():
+    #     nsigs = d_pertid_nsigs.get(pert_id, 0)
+    #     drugs_meta[i] = {'pert_id': pert_id, 'name': name, 'nsigs': nsigs}
+    #     i += 1
 
-    drugs_meta = sorted(drugs_meta, key=lambda x: x['name'])
-    print len(tags), len(d_pert_name)
+    # drugs_meta = sorted(drugs_meta, key=lambda x: x['name'])
+    # print len(tags), len(d_pert_name)
+    global meta_df, N_SIGS, graph_df, drug_synonyms, drug_meta_df
+    global graphs
+    graphs = load_graphs_meta()
+
+    drug_meta_df = load_drug_meta_from_db()
+    
+    # cyjs_filename = os.environ['CYJS']
+    # graph_df = load_graph(cyjs_filename, meta_df)
+    graph_df, meta_df = load_graph_from_db('Signature_Graph_CD_center_LM_sig-only_16848nodes.gml.cyjs',
+      drug_meta_df=drug_meta_df)
+    print meta_df.shape
+    N_SIGS = meta_df.shape[0]
+
+    print graph_df.head()
+
+    drug_synonyms = load_drug_synonyms_from_db(meta_df, graph_df)
+
+
     return
+
 
 @menu_pages.route('/search', methods=['GET'])
 def collections():
@@ -71,7 +91,6 @@ def get_all_drugs():
     """Returns a json object for dataTable to (defer)render.
     """
     return Response(json.dumps({'data':drugs_meta}), mimetype='application/json')
-
 
 @menu_pages.route('/get-started', methods=['GET'])
 def get_started():

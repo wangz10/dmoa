@@ -3,6 +3,7 @@ and their relationships and saves them accordingly.
 """
 
 import sqlalchemy as sa
+import pandas as pd
 
 from substrate import BioCategory, Curator, GeneList, GeneSignature, \
     GeoDataset, Report, SoftFile, Tag
@@ -150,3 +151,37 @@ def get_all_drug_meta():
         d_pert_name = dict(d_pert_name)
 
         return d_pert_name
+
+
+def load_drug_meta_from_db():
+    with session_scope() as session:
+        drug_meta_df = pd.read_sql_query('''
+            SELECT drug_repurposedb.pert_id, drug_repurposedb.pert_iname AS pert_desc,
+            most_frequent_dx_rx.most_frequent_rx, most_frequent_dx_rx.most_frequent_dx, 
+            drug_repurposedb.Phase, drug_repurposedb.MOA
+            FROM most_frequent_dx_rx
+            RIGHT JOIN drug_repurposedb
+            ON drug_repurposedb.pert_id=most_frequent_dx_rx.pert_id
+            ''', session, 
+            index_col='pert_id')
+        print drug_meta_df.shape
+        return drug_meta_df
+
+def load_drug_synonyms_from_db(meta_df, graph_df):
+    with session_scope() as session:
+        # Load synonyms for drugs
+        drug_synonyms = pd.read_sql_table('drug_synonyms', session, columns=['pert_id', 'Name'])
+        print drug_synonyms.shape
+        # Keep only the pert_id that are in the graph
+        pert_ids_in_graph = meta_df.loc[graph_df.index]['pert_id'].unique()
+        print 'Number of unique pert_id in graph:', len(pert_ids_in_graph)
+        drug_synonyms = drug_synonyms.loc[drug_synonyms['pert_id'].isin(pert_ids_in_graph)]
+        # Add pert_id itself as name
+        drug_synonyms = drug_synonyms.append(
+            pd.DataFrame({'pert_id': pert_ids_in_graph, 'Name': pert_ids_in_graph})
+            )
+        drug_synonyms.drop_duplicates(inplace=True)
+        print drug_synonyms.shape
+        return drug_synonyms
+
+

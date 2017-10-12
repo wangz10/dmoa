@@ -1,287 +1,80 @@
-/* Dimensions
- * ------------------------------------------------------------------------ */
-/* Colors
- * ------------------------------------------------------------------------ */
-/* Links */
-/* Fonts
- * ------------------------------------------------------------------------ */
-/* Misc.
- * ------------------------------------------------------------------------ */
-/* Reset
- * ----- */
-html,
-body {
-  margin: 0;
+html { height: 100% }
+body { 
+	height: 100%; 
+	margin: 0; 
+	padding: 0; 
+	position: relative; 
+	font-family: arial, sans-serif;
+	font-size: 13px;
 }
-/* Sticky Footer. Do not change.
- * ----------------------------- */
-html {
-  position: relative;
-  min-height: 100%;
+canvas { width: 100%; height: 100% }
+
+#body { 
+	height: 100%; 
+	margin-left: 20px; 
+	margin-right: 20px; 
+  margin-top: 20px;
+	padding: 0; 
+	position: relative; 
 }
-body {
-  margin-bottom: 210px;
-  /* bottom = footer height */
+
+
+#controls{
+	/*overflow-y: scroll;*/
 }
+
+#share-link input{
+	width: 100%;
+}
+
+#legend{
+	z-index: 10;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+}
+
+#controls{
+	z-index: 10;
+	position: absolute;
+	right: 5px;
+	top: 0px;
+}
+
+#clear-btn {
+  margin-left: 5px;
+}
+
+input.pull-right {
+  color: beige;
+  background-color: black;
+}
+input.pull-right:hover{
+  color: beige;
+  background-color: #5bc0de;
+}
+
+#modal-btn{
+	z-index: 10;
+	position: absolute;
+	right: 225px;
+	top: 50px;
+}
+
+text.legendTitle{
+	font-size: 24px;
+}
+
 #footer {
   position: absolute;
   left: 0;
+  top: 120%;
   bottom: 0;
   height: 210px;
   width: 100%;
 }
-/* Class and tag selectors.
- * ------------------------ */
-body {
-  font-family: arial, sans-serif;
-  font-size: 13px;
-}
-.form-control {
-  font-size: 16px;
-  font-family: 'Roboto', arial, sans-serif;
-}
-.form-control::-webkit-input-placeholder {
-  /* WebKit, Blink, Edge */
-  font-family: 'Roboto', arial, sans-serif;
-  font-size: 16px;
-  font-weight: 100;
-  color: #aaaaaa;
-}
-.form-control:-moz-placeholder {
-  /* Mozilla Firefox 4 to 18 */
-  font-family: 'Roboto', arial, sans-serif;
-  font-size: 16px;
-  font-weight: 100;
-  color: #aaaaaa;
-  opacity: 1;
-}
-.form-control::-moz-placeholder {
-  /* Mozilla Firefox 19+ */
-  font-family: 'Roboto', arial, sans-serif;
-  font-size: 16px;
-  font-weight: 100;
-  color: #aaaaaa;
-  opacity: 1;
-}
-.form-control:-ms-input-placeholder {
-  /* Internet Explorer 10-11 */
-  font-family: 'Roboto', arial, sans-serif;
-  font-size: 16px;
-  font-weight: 100;
-  color: #aaaaaa;
-}
-.form-control:focus {
-  border: 1px solid #1689E5;
-  outline: none;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-a {
-  color: #1689E5;
-  text-decoration: none;
-}
-a:hover {
-  color: #006eb3;
-  text-decoration: none;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: #444;
-  font-family: 'Roboto', arial, sans-serif;
-}
-h1,
-h2,
-h3 {
-  font-weight: 100;
-}
-h4,
-h5,
-h6 {
-  font-weight: 500;
-}
-h1 {
-  font-size: 40px;
-}
-img {
-  max-width: 100%;
-  vertical-align: inherit;
-  /* Bootstrap override */
-}
-img.center {
-  display: block;
-  margin: 0 auto;
-}
-form button.submit {
-  font-size: 14px;
-}
-form .description {
-  background: #f9f9f9;
-  margin-top: 10px;
-  padding: 5px;
-}
-form .description p {
-  margin: 10px;
-}
-table {
-  padding-bottom: 0;
-}
-table td {
-  border: none;
-}
-section {
-  margin-bottom: 20px;
-  border-bottom: 1px solid #eeeeee;
-}
-section.last {
-  border: none;
-}
-select {
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
-  background-position: right 50% !important;
-  background-repeat: no-repeat !important;
-  background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=) !important;
-  padding: .5em !important;
-  padding-right: 1.5em !important;
-  border-radius: 2px !important;
-  line-height: inherit !important;
-  border-color: #7FB800;
-}
-select:-moz-focusring {
-  color: transparent;
-  text-shadow: 0 0 0 #000;
-}
-pre,
-.code {
-  border-radius: 0;
-  background: #f9f9f9;
-  font-family: 'Consolas', courier, monospace;
-  /* Example links overflow the pre tag if the text is too large. */
-  font-size: 12px;
-}
-pre {
-  border: none;
-  white-space: pre-wrap;
-  /* CSS 3 */
-  white-space: -moz-pre-wrap;
-  /* Mozilla, since 1999 */
-  white-space: -pre-wrap;
-  /* Opera 4-6 */
-  white-space: -o-pre-wrap;
-  /* Opera 7 */
-  word-wrap: break-word;
-  /* Internet Explorer 5.5+ */
-}
-.form-control {
-  border-radius: 2px;
-}
-.fa {
-  color: #444;
-}
-.fa:hover {
-  color: #aaaaaa;
-}
-.mono {
-  font-family: monospace;
-}
-.left {
-  float: left;
-}
-.right {
-  float: right;
-}
-.clear {
-  clear: both;
-}
-.highlight {
-  color: #F15A5A;
-}
-.caption,
-caption {
-  font-style: italic;
-  margin-top: 10px;
-  padding: 0;
-}
-.tooltip {
-  opacity: 1 !important;
-  /* This is the color of the arrow: http://stackoverflow.com/a/15383656/1830334 */
-}
-.tooltip .tooltip-inner {
-  background: #7FB800;
-  border: 1px solid #7FB800;
-  color: white;
-  font-weight: bold;
-  border-radius: 0;
-  text-align: left;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-  max-width: 400px;
-}
-.tooltip.top .tooltip-arrow {
-  border-top-color: #7FB800 !important;
-}
-.tooltip.right .tooltip-arrow {
-  border-right-color: #7FB800 !important;
-}
-.tooltip.bottom .tooltip-arrow {
-  border-bottom-color: #7FB800 !important;
-}
-.tooltip.left .tooltip-arrow {
-  border-left-color: #7FB800 !important;
-}
-.instruction {
-  font-family: 'Roboto', arial, sans-serif;
-  font-size: 16px;
-  font-weight: 300;
-}
-.capitalize-initial:first-letter {
-  text-transform: uppercase;
-}
-.btn-file {
-  position: relative;
-  overflow: hidden;
-}
-.btn-file input[type=file] {
-  position: absolute;
-  top: 0;
-  right: 0;
-  min-width: 100%;
-  min-height: 100%;
-  font-size: 100px;
-  text-align: right;
-  filter: alpha(opacity=0);
-  opacity: 0;
-  outline: none;
-  background: white;
-  cursor: inherit;
-  display: block;
-}
-.label {
-  background-color: #1689E5;
-  border-radius: 0;
-  font-size: 12px;
-}
-.label a {
-  color: white;
-}
-.label a:hover,
-.label a:active,
-.label a:focus {
-  color: white;
-  text-decoration: none;
-}
-.label:hover {
-  background-color: #006eb3;
-}
-/* Main structural elements:
- * header, content, footer
- * ----------------------------- */
 #header {
-  background-color: #0089A7;
+  background-color: #ddd;
   box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
   color: white;
   padding: 10px 0;
@@ -289,7 +82,7 @@ caption {
 }
 #header a {
   border: none;
-  color: white;
+  color: black;
   font-family: 'Roboto', arial, sans-serif;
   font-weight: 200;
   text-decoration: none;
@@ -297,7 +90,7 @@ caption {
 }
 #header a:hover {
   cursor: pointer;
-  color: #f9f9f9;
+  color: black;
 }
 #header .nav.navbar-nav.navbar-right a {
   font-size: 13px;
@@ -305,10 +98,10 @@ caption {
 #header .nav.navbar-nav.navbar-right a:hover,
 #header .nav.navbar-nav.navbar-right a:focus {
   opacity: .8;
-  background-color: #0089A7;
+  background-color: #ddd;
 }
 #header .nav.navbar-nav.navbar-right a.highlight {
-  color: #90caf9;
+  color: #ddd;
 }
 #header ul.nav {
   position: relative;
@@ -325,7 +118,8 @@ caption {
   -webkit-transition: background-color 0.25s ease-in-out;
 }
 #header img {
-  width: 23px;
+  width: 50px;
+  vertical-align: middle;
 }
 #header h1 {
   display: inline;
@@ -347,23 +141,29 @@ caption {
 #header form button:hover {
   opacity: .8;
 }
+#header .navbar-brand {
+	text-transform: none;
+	font-size: 30px;
+  float: none;
+}
+
 #footer {
-  background-color: #0089A7;
-  border-top: 10px solid #00708F;
+  background-color: #ddd;
+  border-top: 10px solid black;
 }
 #footer a,
 #footer li,
 #footer p {
-  color: white;
+  color: black;
   font-family: 'Roboto', arial, sans-serif;
   font-size: 14px;
   font-weight: 100;
 }
 #footer h3 {
-  color: white;
+  color: black;
 }
 #footer a {
-  color: #90caf9;
+  color: blue;
   text-decoration: none;
 }
 #footer a:hover {
@@ -371,132 +171,4 @@ caption {
 }
 #footer .container {
   margin-top: 15px;
-}
-/* Library Overrides
- * ----------------- */
-.btn {
-  padding: 4px 8px;
-  border-radius: 2px !important;
-  border: none !important;
-  font-size: 15px;
-  font-family: 'Roboto', arial, sans-serif;
-  font-weight: 200;
-}
-.btn.btn-default {
-  border: 1px solid #eee;
-}
-.btn.btn-primary {
-  background-color: #1689E5;
-}
-.btn.btn-primary:hover {
-  background-color: #126db6;
-  -webkit-transition: background-color 200ms linear;
-  -moz-transition: background-color 200ms linear;
-  -o-transition: background-color 200ms linear;
-  -ms-transition: background-color 200ms linear;
-  transition: background-color 200ms linear;
-}
-.btn.btn-primary.active {
-  background-color: #126db6;
-  -webkit-box-shadow: none;
-  box-shadow: none;
-}
-.btn.btn-info {
-  background-color: #7FB800;
-}
-.btn.btn-info:hover {
-  background-color: #4C6E00;
-  -webkit-transition: background-color 200ms linear;
-  -moz-transition: background-color 200ms linear;
-  -o-transition: background-color 200ms linear;
-  -ms-transition: background-color 200ms linear;
-  transition: background-color 200ms linear;
-}
-.btn.btn-warning {
-  background-color: #aaaaaa;
-}
-.btn.btn-warning:hover {
-  background-color: #444;
-  -webkit-transition: background-color 200ms linear;
-  -moz-transition: background-color 200ms linear;
-  -o-transition: background-color 200ms linear;
-  -ms-transition: background-color 200ms linear;
-  transition: background-color 200ms linear;
-}
-.reorder_section .btn {
-  margin-bottom: 3px;
-}
-.d3-tip {
-  background-color: #7FB800 !important;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
-}
-div.dataTables_wrapper .pagination,
-div.dataTables_wrapper .pagination li a,
-div.dataTables_wrapper input {
-  border-radius: 0;
-}
-div.dataTables_wrapper .pagination > li > a,
-div.dataTables_wrapper .pagination > li > span {
-  color: black;
-}
-div.dataTables_wrapper .pagination > .active > a,
-div.dataTables_wrapper .pagination > .active > a:focus,
-div.dataTables_wrapper .pagination > .active > a:hover,
-div.dataTables_wrapper .pagination > .active > span,
-div.dataTables_wrapper .pagination > .active > span:focus,
-div.dataTables_wrapper .pagination > .active > span:hover {
-  border-color: #7FB800;
-  background-color: #7FB800;
-  color: white;
-}
-.ui-widget {
-  font-family: arial, sans-serif;
-  font-size: 13px;
-}
-.ui-state-default,
-.ui-widget-content .ui-state-default,
-.ui-widget-header .ui-state-default {
-  color: #444;
-}
-.hljs {
-  background-color: #f9f9f9 !important;
-}
-/* See: http://stackoverflow.com/a/33809511/1830334 */
-.table-responsive {
-  overflow-x: inherit;
-}
-/* Responsive design
- * ----------------- */
-@media (max-width: 992px) {
-  body {
-    margin-bottom: 370px;
-    /* bottom = footer height */
-  }
-  #footer {
-    height: 370px;
-  }
-  #footer a,
-  #footer li,
-  #footer p {
-    font-size: 14px;
-  }
-  #footer h3 {
-    font-size: 20px;
-  }
-}
-/* User messages
- * ----------------- */
-.flashes #error-message {
-  background-color: #F15A5A;
-  color: white;
-  font-size: 16px;
-  padding: 10px 0;
-}
-.flashes #error-message p {
-  font-family: 'Roboto', arial, sans-serif;
-  font-weight: 100;
-  margin-bottom: 0;
-}
-label select.input-sm {
-  height: 40px !important;
 }

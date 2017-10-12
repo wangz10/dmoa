@@ -13,3 +13,4 @@ from pages.menu_pages import menu_pages
 from pages.report_pages import report_pages
 from pages.tag_pages import tag_pages
 from pages.signature_pages import signature_pages
+from pages.graph_pages import graph_pages
