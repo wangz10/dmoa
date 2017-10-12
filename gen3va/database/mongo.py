@@ -22,9 +22,20 @@ class Signature(object):
 		'pert_time': int,
 	}
 
-	def __init__(self, sig_id, mongo, pvalue='SCS_centered_by_batch'):
+	collections = {
+		# map for finding which collection to look for the signature
+		3: ('sigs', 'SCS_centered_by_batch'),
+		2: ('sigs_pert_cell', 'avg_pvalue'),
+		1: ('sigs_pert', 'avg_pvalue'),
+	}
+
+	def __init__(self, sig_id, mongo):
 		self.sig_id = sig_id
-		doc = mongo.db.sigs.find_one({'sig_id':sig_id}, self.projection)
+		coll_name, pvalue = self.collections[len(sig_id.split(':'))]
+
+		doc = mongo.db[coll_name].find_one({'sig_id':sig_id}, self.projection)
+		if coll_name == 'sigs_pert':
+			doc['pert_id'] = sig_id
 
 		for key, value in doc.items():
 			value = self.dtypes.get(key, lambda x:x)(value)
