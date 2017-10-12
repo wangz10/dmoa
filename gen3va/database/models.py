@@ -102,6 +102,9 @@ class Drug(db.Model):
             url = 'http://maayanlab.net/SEP-L1000/img/cpd-images/%s.png' % self.pert_id
         return url
 
+    def has_clinical_info(self):
+        return not isnull(self.ingredient_id)
+
     def get_rx_counts(self, nrows=20):
         with session_scope() as session:
             query_results = session\

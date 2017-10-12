@@ -3,7 +3,11 @@
 {% block title %}{{ sig.sig_id }}{% endblock %}
 
 {% block body %}
-
+    <style type="text/css">
+    .enrichr-btn img{
+        width: 15px;
+    }
+    </style>
     <script src='static/lib/highcharts/highcharts.js'></script>
     <script src='static/lib/highcharts/highcharts-more.js'></script>
     <script src='static/lib/highcharts/exporting.js'></script>
@@ -121,59 +125,59 @@
 </div>    
 
 <script type="text/javascript">
-// var gene_lists = {
-//     up_genes: $("#up_genes").data().name,
-//     down_genes: $("#down_genes").data().name,
-//     combined_genes: $("#combined_genes").data().name,
-// };
+var gene_lists = {
+    up_genes: $("#up_genes").data().name,
+    down_genes: $("#down_genes").data().name,
+    combined_genes: $("#combined_genes").data().name,
+};
 
-// var extraction_id = $("#extraction_id").data().name;
+var extraction_id = $("#extraction_id").data().name;
 
-// $(".enrichr-btn").on('click', function(e){
-//     var key = $(this).attr("id");
-//     var genes = gene_lists[key];
-//     var description = extraction_id + '-' + key;
-//     enrich({list: genes, description: description, popup: true})
-// });
+$(".enrichr-btn").on('click', function(e){
+    var key = $(this).attr("id");
+    var genes = gene_lists[key];
+    var description = extraction_id + '-' + key;
+    enrich({list: genes, description: description, popup: true})
+});
 
-// $('[data-toggle="tooltip"]').tooltip();
+$('[data-toggle="tooltip"]').tooltip();
 
-// function enrich(options) { // http://amp.pharm.mssm.edu/Enrichr/#help
-//     var defaultOptions = {
-//     description: "",
-//     popup: false
-//   };
+function enrich(options) { // http://amp.pharm.mssm.edu/Enrichr/#help
+    var defaultOptions = {
+    description: "",
+    popup: false
+  };
 
-//   if (typeof options.description == 'undefined')
-//     options.description = defaultOptions.description;
-//   if (typeof options.popup == 'undefined')
-//     options.popup = defaultOptions.popup;
-//   if (typeof options.list == 'undefined')
-//     alert('No genes defined.');
+  if (typeof options.description == 'undefined')
+    options.description = defaultOptions.description;
+  if (typeof options.popup == 'undefined')
+    options.popup = defaultOptions.popup;
+  if (typeof options.list == 'undefined')
+    alert('No genes defined.');
 
-//   var form = document.createElement('form');
-//   form.setAttribute('method', 'post');
-//   form.setAttribute('action', 'http://amp.pharm.mssm.edu/Enrichr/enrich');
-//   if (options.popup)
-//     form.setAttribute('target', '_blank');
-//   form.setAttribute('enctype', 'multipart/form-data');
+  var form = document.createElement('form');
+  form.setAttribute('method', 'post');
+  form.setAttribute('action', 'http://amp.pharm.mssm.edu/Enrichr/enrich');
+  if (options.popup)
+    form.setAttribute('target', '_blank');
+  form.setAttribute('enctype', 'multipart/form-data');
 
-//   var listField = document.createElement('input');
-//   listField.setAttribute('type', 'hidden');
-//   listField.setAttribute('name', 'list');
-//   listField.setAttribute('value', options.list);
-//   form.appendChild(listField);
+  var listField = document.createElement('input');
+  listField.setAttribute('type', 'hidden');
+  listField.setAttribute('name', 'list');
+  listField.setAttribute('value', options.list);
+  form.appendChild(listField);
 
-//   var descField = document.createElement('input');
-//   descField.setAttribute('type', 'hidden');
-//   descField.setAttribute('name', 'description');
-//   descField.setAttribute('value', options.description);
-//   form.appendChild(descField);
+  var descField = document.createElement('input');
+  descField.setAttribute('type', 'hidden');
+  descField.setAttribute('name', 'description');
+  descField.setAttribute('value', options.description);
+  form.appendChild(descField);
 
-//   document.body.appendChild(form);
-//   form.submit();
-//   document.body.removeChild(form);
-// }
+  document.body.appendChild(form);
+  form.submit();
+  document.body.removeChild(form);
+}
 </script>
 
 {% endblock %}
