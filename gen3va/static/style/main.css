@@ -277,6 +277,9 @@ caption {
 .label:hover {
   background-color: #006eb3;
 }
+.navbar {
+  margin-bottom: 0;
+}
 /* Main structural elements:
  * header, content, footer
  * ----------------------------- */
