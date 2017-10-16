@@ -1,4 +1,4 @@
-"""Renders signature pages.
+"""Renders signature pages for signatures from L1000FWD.
 """
 
 from flask import Blueprint, jsonify, redirect, request, render_template, \
@@ -31,3 +31,26 @@ def view_signature(sig_id):
                             drug=drug
                             )
 
+@signature_pages.route('/download/<string:sig_id>/<string:direction>', methods=['GET'])
+def download_gene_list(sig_id, direction):
+    """Generate txt file for gene lists in gene signatures.
+    direction should be attr name in one of ('combined_genes', 'up_genes', 'down_genes')
+    """
+    sig = Signature(sig_id, mongo)
+    if direction == 'up_genes':
+        gene_list = sig.upGenes
+    elif direction == 'down_genes':
+        gene_list = sig.dnGenes
+    else:
+        gene_list = sig.combined_genes
+
+    # Make a file on-the-fly
+    gene_list = '\n'.join(gene_list)
+    filename = '%s-%s.txt' % (sig_id, direction)
+
+    response = make_response(gene_list)
+    response.headers["Content-Disposition"] = "attachment; filename=%s" % filename
+    return response
+
+
+    

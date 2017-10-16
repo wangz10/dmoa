@@ -16,6 +16,9 @@ class Signature(object):
 		'avg_center_LM_det': False,
 		'CDavg_center_LM_det': False,
 		'CDavg_nocenter_LM_det': False,
+		'CD_center_Full': False,
+		'pvalues_Full':False,
+		'sigIdx': False,
 	}
 
 	dtypes = {
@@ -43,6 +46,9 @@ class Signature(object):
 				setattr(self, 'pvalue', value)
 			else:
 				setattr(self, key, value)
+
+		# Get combined_genes
+		self.combined_genes = list(set(doc.get('upGenes', [])) | set(doc.get('dnGenes', [])))
 
 	def __repr__(self):
 		return '<Signature %r>' % self.sig_id

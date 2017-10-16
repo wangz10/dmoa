@@ -3,9 +3,21 @@
 {% block title %}{{ sig.sig_id }}{% endblock %}
 
 {% block body %}
+
+
+<!-- Parse variables from gene_signature object -->
+{% set up_genes = sig.upGenes|join('\n') %}
+{% set down_genes = sig.upGenes|join('\n') %}
+{% set combined_genes = sig.combined_genes|join('\n') %}
+<!-- Store variables in meta tags -->
+<meta id="up_genes" data-name="{{ up_genes }}">
+<meta id="down_genes" data-name="{{ down_genes }}">
+<meta id="combined_genes" data-name="{{ combined_genes }}">
+
     <style type="text/css">
     .enrichr-btn img{
         width: 15px;
+        cursor: pointer;
     }
     </style>
     <script src='static/lib/highcharts/highcharts.js'></script>
@@ -66,26 +78,26 @@
             <tbody>
                 <tr>
                     <td></td>
-                    <td>Up()</td>
-                    <td>Down()</td>
-                    <td>Combined()</td>
+                    <td>Up({{ sig.upGenes|length }})</td>
+                    <td>Down({{ sig.dnGenes|length }})</td>
+                    <td>Combined({{ sig.combined_genes|length }})</td>
                 </tr>
                 <tr>
                     <td>
                         <span data-toggle="tooltip" title="Text file containing a gene list resulting from differential expression analysis.">Gene lists</span>
                     </td>
                     <td>
-                        <a href="report/signature/download/{{extraction_id}}/up_genes">
+                        <a href="sig/download/{{sig.sig_id}}/up_genes">
                             <i class="fa fa-download"></i>
                         </a>
                     </td>
                     <td>
-                        <a href="report/signature/download/{{extraction_id}}/down_genes">
+                        <a href="sig/download/{{sig.sig_id}}/down_genes">
                             <i class="fa fa-download"></i>
                         </a>
                     </td>
                     <td>
-                        <a href="report/signature/download/{{extraction_id}}/combined_genes">
+                        <a href="sig/download/{{sig.sig_id}}/combined_genes">
                             <i class="fa fa-download"></i>
                         </a>
                     </td>
@@ -131,12 +143,12 @@ var gene_lists = {
     combined_genes: $("#combined_genes").data().name,
 };
 
-var extraction_id = $("#extraction_id").data().name;
+var sig_id = "{{sig.sig_id}}";
 
 $(".enrichr-btn").on('click', function(e){
     var key = $(this).attr("id");
     var genes = gene_lists[key];
-    var description = extraction_id + '-' + key;
+    var description = sig_id + '-' + key;
     enrich({list: genes, description: description, popup: true})
 });
 
