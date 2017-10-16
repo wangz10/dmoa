@@ -2,10 +2,28 @@
 Additional ORMs for the DrugPage app. 
 '''
 import json
+import httplib
+from urlparse import urlparse
 from collections import OrderedDict
 from substrate import db
 
 from gen3va.database.utils import session_scope
+
+
+def get_status_code(url):
+    ## modified from: https://stackoverflow.com/questions/1140661/what-s-the-best-way-to-get-an-http-response-code-from-a-url
+    """ This function retreives the status code of a website by requesting
+        HEAD data from the host. This means that it only requests the headers.
+        If the host cannot be reached or something else goes wrong, it returns
+        None instead.
+    """
+    try:
+        o = urlparse(url)
+        conn = httplib.HTTPConnection(o.hostname)
+        conn.request("HEAD", o.path)
+        return conn.getresponse().status
+    except StandardError:
+        return None
 
 
 def isnull(value):
@@ -100,6 +118,11 @@ class Drug(db.Model):
             url = 'http://life.ccs.miami.edu/life/web/images/sm-images/400/%s.png' % self.LSM_id
         else:
             url = 'http://maayanlab.net/SEP-L1000/img/cpd-images/%s.png' % self.pert_id
+
+        # Test if the image exists
+        resp_code = get_status_code(url)
+        if resp_code != 200:
+            url = 'https://s3.amazonaws.com/data.clue.io/trimmed_perts/%s.png' % self.pert_id
         return url
 
     def has_clinical_info(self):
