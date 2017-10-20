@@ -4,7 +4,7 @@
 import os
 import json
 
-from flask import abort, Blueprint, render_template, request, Response
+from flask import abort, Blueprint, render_template, request, Response, redirect
 
 from substrate import BioCategory, Curator, Tag
 from gen3va.database import Drug
@@ -63,7 +63,9 @@ def collections():
 
 @menu_pages.route('/', methods=['GET'])
 def visualize():
-    return render_template('pages/visualize.html', url=os.environ.get('EMBED_URL', None), menu_item='')
+    url = os.environ.get('EMBED_URL', None)
+    # return render_template('pages/visualize.html', url=os.environ.get('EMBED_URL', None), menu_item='')
+    return redirect(url, code=302)
 
 
 @menu_pages.route('/drugs', methods=['GET'])
