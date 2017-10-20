@@ -1,6 +1,6 @@
 """Renders signature pages for signatures from L1000FWD.
 """
-
+import json
 from flask import Blueprint, jsonify, redirect, request, render_template, \
     url_for, abort, make_response
 from flask.ext.login import login_required
@@ -52,5 +52,14 @@ def download_gene_list(sig_id, direction):
     response.headers["Content-Disposition"] = "attachment; filename=%s" % filename
     return response
 
+
+@signature_pages.route('/binary/<string:sig_id>', methods=['GET'])
+def signature_api(sig_id):
+    """Get up/down gene sets:
+    json encoded signature object: {up_genes: [], down_genes: [], sig_id: sig_id}.
+    """
+    sig = Signature(sig_id, mongo)
+    sig_doc = {'sig_id': sig_id, 'up_genes': sig.upGenes, 'down_genes': sig.dnGenes}
+    return json.dumps(sig_doc)
 
     
