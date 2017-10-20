@@ -131,9 +131,9 @@ class Drug(db.Model):
     def get_rx_counts(self, nrows=20):
         with session_scope() as session:
             query_results = session\
-                .execute("""SELECT co_rx.count AS z, 
-                    co_rx.normed_count AS x,
-                    rx_counts.count AS y, rx_counts.ingredient AS name
+                .execute("""SELECT co_rx.jaccard_index AS x, 
+                    rx_counts.count AS y,
+                    co_rx.count AS z, rx_counts.ingredient AS name
                     FROM co_rx
                     LEFT JOIN rx_counts ON rx_counts.`id`=co_rx.`co_prescribed_drug_id`
                     WHERE ingredient_id=:ingredient_id
@@ -153,9 +153,9 @@ class Drug(db.Model):
     def get_dx_counts(self, nrows=20):
         with session_scope() as session:
             query_results = session\
-                .execute("""SELECT co_dx.count AS z, 
-                    co_dx.normed_count AS x, 
-                    dx_counts.count AS y, dx_counts.ICD9, 
+                .execute("""SELECT co_dx.jaccard_index AS x, 
+                    dx_counts.count AS y, 
+                    co_dx.count AS z, dx_counts.ICD9, 
                     dx_counts.diagnosis AS name
                     FROM co_dx
                     LEFT JOIN dx_counts ON dx_counts.`id`=co_dx.`diagnosis_id`

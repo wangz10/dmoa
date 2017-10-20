@@ -525,7 +525,7 @@ function createAndManageVisualizations(config) {
                 value = Highcharts.numberFormat(value, 3);
                 return '<table>' +
                         '<tr><th colspan="2"><h3>'+this.point.name+'</h3></th></tr>' +
-                        '<tr><th>Co-occurence rate:</th><td>'+value+'</td></tr>' +
+                        '<tr><th>Jaccard Index:</th><td>'+value+'</td></tr>' +
                         '</table>'                
             }
         };
@@ -550,7 +550,7 @@ function createAndManageVisualizations(config) {
             yAxis: {
                 allowDecimals: true,
                 title: {
-                    text: 'Co-occurence rate'
+                    text: 'Jaccard Index'
                 }
             },
             tooltip: {
@@ -569,13 +569,13 @@ function createAndManageVisualizations(config) {
         $(btnSelector).click(function(){
             var currentAttr = $(this).attr('currentAttr');
 
-            if (currentAttr == 'y_'){ // current is count, switch to rate
+            if (currentAttr == 'z_'){ // current is count, switch to rate
                 $(btnSelector).text('Sort by co-occurence count');
                 var data1 = processAndSortData(data, 'x_');
                 
                 chart.series[0].remove(false)
                 chart.addSeries({data: data1}, false)
-                chart.yAxis[0].setTitle({text:'Co-occurence rate'}, false);
+                chart.yAxis[0].setTitle({text:'Jaccard Index'}, false);
                 chart.yAxis[0].setExtremes(0, data1[0].y, false);
                 chart.yAxis[0].update({
                     'type': 'linear'
@@ -583,8 +583,8 @@ function createAndManageVisualizations(config) {
 
                 $(this).attr('currentAttr', 'x_')
             } else{ // current is rate, switch to count
-                $(btnSelector).text('Sort by co-occurence rate');
-                var data2 = sortDataAndAddColor(data, 'y_');
+                $(btnSelector).text('Sort by Jaccard Index');
+                var data2 = sortDataAndAddColor(data, 'z_');
 
                 chart.series[0].remove(false)
                 chart.addSeries({data: data2}, false)
@@ -594,7 +594,7 @@ function createAndManageVisualizations(config) {
                     'type': 'logarithmic'
                 });
 
-                $(this).attr('currentAttr', 'y_')
+                $(this).attr('currentAttr', 'z_')
             }
         })
         
@@ -606,7 +606,7 @@ function createAndManageVisualizations(config) {
             var x = Highcharts.numberFormat(this.point.x, 4);
             return '<table>' +
                     '<tr><th colspan="2"><h3>'+this.point.name+'</h3></th></tr>' +
-                    '<tr><th>Co-occurence rate:</th><td>'+x+'</td></tr>' +
+                    '<tr><th>Jaccard Index:</th><td>'+x+'</td></tr>' +
                     '<tr><th>Total count:</th><td>'+this.point.y+'</td></tr>' +
                     '<tr><th>Co-occurence count:</th><td>'+this.point.z+'</td></tr>' + 
                     '</table>'
@@ -627,7 +627,7 @@ function createAndManageVisualizations(config) {
             xAxis: {
                 gridLineWidth: 1,
                 title: {
-                    text: 'Co-occurence rate'
+                    text: 'Jaccard Index'
                 },
                 labels: {
                     enabled: true
