@@ -7,7 +7,7 @@
 
 <!-- Parse variables from gene_signature object -->
 {% set up_genes = sig.upGenes|join('\n') %}
-{% set down_genes = sig.upGenes|join('\n') %}
+{% set down_genes = sig.dnGenes|join('\n') %}
 {% set combined_genes = sig.combined_genes|join('\n') %}
 <!-- Store variables in meta tags -->
 <meta id="up_genes" data-name="{{ up_genes }}">
