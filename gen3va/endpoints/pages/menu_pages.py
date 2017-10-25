@@ -55,7 +55,7 @@ def get_globals():
     print len(tags), len(d_pert_name)
     return
 
-@menu_pages.route('/search', methods=['GET'])
+@menu_pages.route('/search_drug', methods=['GET'])
 def collections():
     return render_template('pages/collections.html',
                            drugs_json=json.dumps({'data':drugs_meta}),

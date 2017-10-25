@@ -77,6 +77,38 @@ function createAndManageVisualizations(config) {
             $(elem).hide();
             console.log(e);
         }
+
+
+        plotPCA(config.pcaPlot);
+        try {
+            elem = '#genes-heat-map';
+            createClustergram(
+                elem,
+                config.genesHeatMap
+            );
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
+        try {
+            elem = '#l1000cds2-heat-map';
+            createClustergram(
+                elem,
+                config.l1000cds2HeatMap
+            );
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
+        try {
+            elem = '#enrichr-heat-maps';
+            createAndWatchEnrichrHeatMaps(elem, config.enrichrHeatMaps);
+        } catch (e) {
+            $(elem).hide();
+            console.log(e);
+        }
+
+
     });
 
     /* Creates the Enrichr clustergrams.
@@ -375,6 +407,7 @@ function createAndManageVisualizations(config) {
     function plotPCA(pcaObj) {
         if (typeof pcaObj === 'undefined')
             return;
+        console.log(pcaObj)
 
         // If there is only one data series, use Geneva's blue. Otherwise,
         // let Highcharts figure it out.
