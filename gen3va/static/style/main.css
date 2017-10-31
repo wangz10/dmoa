@@ -33,7 +33,7 @@ body {
 /* Class and tag selectors.
  * ------------------------ */
 body {
-  font-family: arial, sans-serif;
+  font-family: 'Roboto', arial, sans-serif;
   font-size: 13px;
 }
 .form-control {
@@ -351,22 +351,22 @@ caption {
   opacity: .8;
 }
 #footer {
-  background-color: #0089A7;
-  border-top: 10px solid #00708F;
+  background-color: #f8f8f8;
+  border-top: solid #e7e7e7;
 }
 #footer a,
 #footer li,
 #footer p {
-  color: white;
+  color: black;
   font-family: 'Roboto', arial, sans-serif;
   font-size: 14px;
   font-weight: 100;
 }
 #footer h3 {
-  color: white;
+  color: black;
 }
 #footer a {
-  color: #90caf9;
+  color: blue;
   text-decoration: none;
 }
 #footer a:hover {
@@ -470,10 +470,9 @@ div.dataTables_wrapper .pagination > .active > span:hover {
 }
 /* Responsive design
  * ----------------- */
-@media (max-width: 992px) {
+/*@media (max-width: 992px) {
   body {
     margin-bottom: 370px;
-    /* bottom = footer height */
   }
   #footer {
     height: 370px;
@@ -487,7 +486,7 @@ div.dataTables_wrapper .pagination > .active > span:hover {
     font-size: 20px;
   }
 }
-/* User messages
+*//* User messages
  * ----------------- */
 .flashes #error-message {
   background-color: #F15A5A;
