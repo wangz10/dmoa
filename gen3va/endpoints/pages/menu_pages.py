@@ -7,7 +7,7 @@ import json
 from flask import abort, Blueprint, render_template, request, Response, redirect
 
 from substrate import BioCategory, Curator, Tag
-from gen3va.database import Drug
+from gen3va.database import Drug, load_graphs_meta
 from gen3va.database import database
 from gen3va.config import Config
 
@@ -40,7 +40,8 @@ menu_pages = Blueprint('menu_pages',
 
 @menu_pages.before_app_first_request
 def get_globals():
-    global drugs_meta
+    global drugs_meta, graphs
+
     tags = database.get_all(Tag)
     d_pertid_nsigs = {tag.name: len(tag.gene_signatures) for tag in tags}
     d_pert_name = database.get_all_drug_meta()
@@ -53,20 +54,30 @@ def get_globals():
 
     drugs_meta = sorted(drugs_meta, key=lambda x: x['name'])
     print len(tags), len(d_pert_name)
+
+    graphs = load_graphs_meta()
     return
 
 @menu_pages.route('/search_drug', methods=['GET'])
 def collections():
     return render_template('pages/collections.html',
                            drugs_json=json.dumps({'data':drugs_meta}),
-                           menu_item='collections')
+                           menu_item='collections',
+                           graphs=graphs
+                           )
 
+## Redirect entpoints:
 @menu_pages.route('/', methods=['GET'])
 def visualize():
     url = os.environ.get('EMBED_URL', None)
     # return render_template('pages/visualize.html', url=os.environ.get('EMBED_URL', None), menu_item='')
     return redirect(url, code=302)
 
+@menu_pages.route('/L1000FWD/<path:path>', methods=['GET'])
+def redirect_to(path):
+    base_url = os.environ.get('EMBED_URL', None)
+    url = base_url + '/' + path 
+    return redirect(url, code=302)
 
 @menu_pages.route('/drugs', methods=['GET'])
 def get_all_drugs():

@@ -6,7 +6,7 @@ from flask import Blueprint, jsonify, redirect, request, render_template, \
 from flask.ext.login import login_required
 
 from substrate import Report, Tag, GeneSignature
-from gen3va.database import Drug
+from gen3va.database import Drug, load_graphs_meta
 from gen3va.config import Config
 from gen3va import database, report_builder
 
@@ -14,6 +14,12 @@ from gen3va import database, report_builder
 report_pages = Blueprint('report_pages',
                          __name__,
                          url_prefix=Config.REPORT_URL)
+
+@report_pages.before_app_first_request
+def get_globals():
+    global graphs 
+    graphs = load_graphs_meta()
+    return
 
 
 # @report_pages.route('/<string:tag_name>', methods=['GET'])
@@ -43,11 +49,10 @@ def view_approved_report(tag_name):
     if not tag:
     #     abort(404)
         return render_template('pages/report-empty.html',
-                                drug=drug)
+                                drug=drug,
+                                graphs=graphs)
     else:
         report = tag.approved_report
-        print tag.name
-        print report.id
         if not report.complete(Config.SUPPORTED_ENRICHR_LIBRARIES):
             print 'Report for %s is not complete, building...' % tag.name
             print len(report.heat_maps)
@@ -56,7 +61,9 @@ def view_approved_report(tag_name):
         return render_template('pages/report.html',
                                tag=tag,
                                drug=drug,
-                               report=report)
+                               report=report,
+                               graphs=graphs
+                               )
 
 @report_pages.route('/signature/<string:extraction_id>', methods=['GET'])
 def view_gene_signature(extraction_id):
@@ -64,7 +71,8 @@ def view_gene_signature(extraction_id):
     """
     gene_signature = database.get(GeneSignature, extraction_id, 'extraction_id')
     return render_template('pages/gene-signature.html',
-                            gene_signature=gene_signature)
+                            gene_signature=gene_signature,
+                            graphs=graphs)
 
 @report_pages.route('/signature/download/<string:extraction_id>/<string:direction>', methods=['GET'])
 def download_gene_list(extraction_id, direction):
@@ -86,107 +94,6 @@ def enrichr_gene_list(extraction_id, direction):
     """Get Enrichr result for gene lists in gene signatures.
     """
     raise NotImplementedError
-
-
-@report_pages.route('/<int:report_id>/<string:tag_name>', methods=['GET'])
-def view_custom_report(report_id, tag_name):
-    """Views a custom report by report ID.
-    """
-    tag = database.get(Tag, tag_name, 'name')
-    report = database.get(Report, report_id)
-    print(report.category)
-    print(report.gene_signatures)
-    if not tag or not report:
-        abort(404)
-    if report.pca_plot:
-        pca_json = report.pca_plot.data
-    else:
-        pca_json = None
-    return render_template('pages/report.html',
-                           tag=tag,
-                           report=report,
-                           pca_json=pca_json)
-
-
-@report_pages.route('/custom/<string:tag_name>', methods=['POST'])
-def build_custom_report(tag_name):
-    """Builds a custom report.
-    """
-    tag = database.get(Tag, tag_name, 'name')
-    if not tag:
-        abort(404)
-
-    category = request.json.get('category')
-    report_name = request.json.get('report_name')
-    extraction_ids = _get_extraction_ids(request)
-    gene_signatures = database.get_signatures_by_ids(extraction_ids)
-    report_id = report_builder.build_custom(tag, gene_signatures,
-                                            report_name, category)
-
-    # This endpoint is hit via an AJAX request. JavaScript must perform the
-    # redirect.
-    new_url = '%s/%s/%s' % (Config.REPORT_URL, report_id, tag.name)
-    return jsonify({
-        'new_url': new_url
-    })
-
-
-# This differs from the endpoint /gen3va/custom/<tag_name> in that it does not
-# require an explicitly passing in any extraction_ids.
-@report_pages.route('/custom/all/<string:tag_name>', methods=['POST'])
-def build_custom_report_from_all_signatures(tag_name):
-    """Builds a custom report from all signatures.
-    """
-    tag = database.get(Tag, tag_name, 'name')
-    if not tag:
-        abort(404)
-
-    report_name = tag.name
-    category = None
-    report_id = report_builder.build_custom(tag, tag.gene_signatures,
-                                            report_name, category)
-
-    new_url = '%s/%s/%s' % (Config.REPORT_URL, report_id, tag.name)
-    return redirect(new_url)
-
-
-@report_pages.route('', methods=['GET'])
-def view_all_reports():
-    """Renders page to view all reports.
-    """
-    reports = database.get_all(Report)
-    return render_template('pages/reports-all.html',
-                           report_url=Config.REPORT_URL,
-                           reports=reports)
-
-
-# Admin end points.
-# ----------------------------------------------------------------------------
-
-@report_pages.route('/approved/<string:tag_name>/build', methods=['GET'])
-@login_required
-def build_approved_report(tag_name):
-    """Builds the an approved report for a tag.
-    """
-    category = request.args.get('category')
-    tag = database.get(Tag, tag_name, 'name')
-    report_builder.build(tag, category=category)
-    return redirect(url_for('report_pages.view_approved_report',
-                            tag_name=tag.name))
-
-
-@report_pages.route('/approved/<string:tag_name>/build_no_cache',
-                    methods=['GET'])
-@login_required
-def reanalyze_approved_report(tag_name):
-    """Reanalyze, i.e. requests new results from Enrichr and L1000CDS2, an
-    approved report for a tag.
-    """
-    category = request.args.get('category')
-    tag = database.get(Tag, tag_name, 'name')
-    report_builder.build(tag, category=category, reanalyze=True)
-    return redirect(url_for('report_pages.view_approved_report',
-                            tag_name=tag.name))
 
 
 # Utility methods

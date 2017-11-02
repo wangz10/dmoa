@@ -22,11 +22,13 @@
             <a class="dropdown-toggle" data-toggle="dropdown">Graphs by Cell Lines<span class="caret"></span></a>
             <ul class="dropdown-menu" role="menu">
               
-
+              {% for graph in graphs['cells'] %}
+                <li><a href="L1000FWD/graph_page/{{ graph.name }}">{{ graph.display_name }}</a></li>
+              {% endfor %}
 
             </ul>
           </li>
-          <li id="search-drug"><a href="L1000FWD/search_drug">Search Drug Reports</a></li>
+          <li id="search-drug"><a href="search_drug">Search Drug Reports</a></li>
           <li id="subset-sigs"><a href="L1000FWD/subset_page">Subset Signatures</a></li>
 
         </ul>
