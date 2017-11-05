@@ -572,7 +572,7 @@ function createAndManageVisualizations(config) {
                 enabled: true,
             },
             title: {
-                text: 'Bar plot'
+                text: ''
             },
             xAxis: {
                 type: 'category',
@@ -640,7 +640,7 @@ function createAndManageVisualizations(config) {
             return '<table>' +
                     '<tr><th colspan="2"><h3>'+this.point.name+'</h3></th></tr>' +
                     '<tr><th>Jaccard Index:</th><td>'+x+'</td></tr>' +
-                    '<tr><th>Total count:</th><td>'+this.point.y+'</td></tr>' +
+                    '<tr><th>Instances:</th><td>'+this.point.y+'</td></tr>' +
                     '<tr><th>Co-occurence count:</th><td>'+this.point.z+'</td></tr>' + 
                     '</table>'
         };
@@ -668,7 +668,7 @@ function createAndManageVisualizations(config) {
             },
             yAxis: {
                 title: {
-                    text: 'Total count'
+                    text: 'Instances'
                 },
                 labels: {
                     enabled: true
@@ -701,7 +701,7 @@ function createAndManageVisualizations(config) {
             return '<table>' +
                     '<tr><th colspan="2"><h3>'+this.point.name+'</h3></th></tr>' +
                     '<tr><th>Co-occurence rate:</th><td>'+this.point.x+'</td></tr>' +
-                    '<tr><th>Total count:</th><td>'+y+'</td></tr>' +
+                    '<tr><th>Instances:</th><td>'+y+'</td></tr>' +
                     '<tr><th>Co-occurence count:</th><td>'+this.point.z+'</td></tr>' + 
                     '</table>'
         };

@@ -55,20 +55,24 @@ createAndManageVisualizations({
 <div class='page' id='signature-page'>
   <div class="ribbon">
     <div class="container">
-      <h1>Signature landing page</h1>
+      <h1>Signature Landing Page</h1>
       <!-- The content in .modal-content for gene signatures -->
       <dl class="dl-horizontal">
         <dt>Signature ID</dt>
         <dd>{{ sig.sig_id|c_filter_empty }}</dd>
-        <dt>Cell</dt>
+        <dt>Cell Line</dt>
         <dd>{{ sig.cell_id|c_filter_empty }}</dd>
         <dt>Dose</dt>
-        <dd>{{ sig.pert_dose|c_filter_empty }}μM</dd>
+        <dd>{{ sig.pert_dose|c_filter_empty }} μM</dd>
         <dt>Time</dt>
-        <dd>{{ sig.pert_time|c_filter_empty }}H</dd>
+        <dd>{{ sig.pert_time|c_filter_empty }} hours</dd>
         <dt>p-value</dt>
-        <dd>{{ sig.pvalue }}</dd>
-        <dt>Drug name</dt>
+        {% if sig.pvalue == 0.0 %}
+          <dd>&lt; 0.0001</dd>
+        {% else %}  
+          <dd>{{ sig.pvalue }}</dd>
+        {% endif %}
+        <dt>Drug Name</dt>
         <dd>{{ drug.pert_iname }}</dd>
       </dl>
       <div id='gene-signatures-table' class='section'>
@@ -80,9 +84,9 @@ createAndManageVisualizations({
             <tbody>
               <tr>
                 <td></td>
-                <td>Up({{ sig.upGenes|length }})</td>
-                <td>Down({{ sig.dnGenes|length }})</td>
-                <td>Combined({{ sig.combined_genes|length }})</td>
+                <td>Up ({{ sig.upGenes|length }})</td>
+                <td>Down ({{ sig.dnGenes|length }})</td>
+                <td>Combined ({{ sig.combined_genes|length }})</td>
               </tr>
               <tr>
                 <td>
@@ -106,7 +110,7 @@ createAndManageVisualizations({
               </tr>
               <tr>
                 <td>
-                  <span data-toggle="tooltip" title="Perform enrichment analysis against over 70 gene set libraries with Enrichr, a popular gene set enrichment analysis tool.">Enrichr</span>
+                  <span data-toggle="tooltip" title="Perform enrichment analysis against over 70 gene set libraries with Enrichr, a popular gene set enrichment analysis tool.">Submit for Analysis with Enrichr</span>
                 </td>
                 <td>
                   <a id="up_genes" class="enrichr-btn">
