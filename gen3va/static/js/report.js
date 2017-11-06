@@ -592,7 +592,7 @@ function createAndManageVisualizations(config) {
             },
             series: [],
         });
-        chart.addSeries({data: data})
+        chart.addSeries({showInLegend: false, data: data})
         
         // button to switch data
         var btnSelector = '#'+ renderTo + '-btn';
