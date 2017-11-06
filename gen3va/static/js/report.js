@@ -607,7 +607,7 @@ function createAndManageVisualizations(config) {
                 var data1 = processAndSortData(data, 'x_');
                 
                 chart.series[0].remove(false)
-                chart.addSeries({data: data1}, false)
+                chart.addSeries({showInLegend: false, data: data1}, false)
                 chart.yAxis[0].setTitle({text:'Jaccard Index'}, false);
                 chart.yAxis[0].setExtremes(0, data1[0].y, false);
                 chart.yAxis[0].update({
@@ -620,7 +620,7 @@ function createAndManageVisualizations(config) {
                 var data2 = sortDataAndAddColor(data, 'z_');
 
                 chart.series[0].remove(false)
-                chart.addSeries({data: data2}, false)
+                chart.addSeries({showInLegend: false, data: data2}, false)
                 chart.yAxis[0].setTitle({text:'Co-occurence count'}, false);
                 chart.yAxis[0].setExtremes(0, data2[0].y, false);
                 chart.yAxis[0].update({
