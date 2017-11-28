@@ -54,15 +54,6 @@
 
         });
 
-        // To load corresponding content into modal only when <a> is clicked.
-        $(document).ready(function(){
-            $('a.modal-btn').tooltip({placement: 'right'});
-            $('a.modal-btn').on('click', function(e){
-                var extraction_id = $(this).attr('data-src');
-                var modal_url = 'report/signature/' + extraction_id
-                $(".modal-body").load(modal_url)
-            });
-        })
     </script>
 
     <div class='page' id='report-page'>

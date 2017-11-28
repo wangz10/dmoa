@@ -355,6 +355,16 @@ function createAndManageVisualizations(config) {
         $('table').DataTable({ 
             iDisplayLength: 5,
             aLengthMenu: [5, 10, 25, 50, 100],  
+            fnInitComplete: function(){
+                this.$('a.modal-btn').tooltip({placement: 'right'});
+                // To load corresponding content into modal only when <a> is clicked.
+                this.$('a.modal-btn').on('click', function(e){
+                    var extraction_id = $(this).attr('data-src');
+                    var modal_url = 'report/signature/' + extraction_id
+                    console.log(modal_url)
+                    $(".modal-body").load(modal_url)
+                });
+            }
         });
     }
 
